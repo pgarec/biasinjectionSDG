@@ -12,6 +12,7 @@ from src.utils.utils_prompt import read_prompt
 from src.utils import utils_df
 from src.utils.utils_llm import run_experiments
 from src.utils.utils_loading import load_experiments
+from src.utils.utils_slurm import run_experiments_slurm
 
 
 def main():
@@ -57,8 +58,8 @@ def main():
     )
     print(f"Reading prompt from: {path_prompt}")
     prompt = read_prompt(path_prompt)
-    asyncio.run(run_experiments(cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt, args, config["experiments"], LOCAL_DIR, DATABASE, df_real))
-
+    # asyncio.run(run_experiments(cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt, args, config["experiments"], LOCAL_DIR, DATABASE, df_real))
+    run_experiments_slurm(cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt_path, config["experiments"])
 
 if __name__ == "__main__":
     main()
