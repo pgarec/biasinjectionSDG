@@ -1,210 +1,246 @@
 import os
+import sys
 import json
-from launcher import schedule_job
+import subprocess
+import random
+from typing import Dict, List, Any
+from pathlib import Path
 
 script_dir = os.path.dirname(os.path.abspath("src/"))
 sys.path.append(script_dir)
 sys.path.append("./src/utils")
-sys.path.append("./scripts/")
 
-from launcher import schedule_job
+
+def schedule_job(
+    user: str,
+    queue: str,
+    specific_name: str,
+    results_path: str,
+    arguments: str,
+    exp_max_duration: str,
+    exclusive: bool,
+    no_effect: bool,
+    container_image: str,
+    home_code_dir: str,
+    container_code_dir: str,
+    slurm_executable: str,
+    benchmark_executable: str,
+    env_vars: Dict[str, str] = None,
+) -> str:
+    """Schedule a single SLURM job using envsubst approach."""
+    
+    exp_results_path = os.path.join(results_path, specific_name)
+    os.makedirs(exp_results_path, exist_ok=True)
+    
+    env = os.environ.copy()
+    env["EXP_NAME"] = specific_name
+    env["EXP_MAX_DURATION_SECONDS"] = exp_max_duration
+    env["EXP_RESULTS_PATH"] = exp_results_path
+    env["EXP_HOME_CODE_DIR"] = os.path.abspath(home_code_dir)
+    env["EXP_CONTAINER_CODE_DIR"] = container_code_dir
+    env["EXP_CONTAINER_IMAGE"] = container_image
+    
+    # Add any additional environment variables
+    if env_vars:
+        for key, value in env_vars.items():
+            env[key] = value
+    
+    # Build environment variables string for singularity
+    str_env_vars = ""
+    if env_vars:
+        for key, value in env_vars.items():
+            str_env_vars += f" --env {key}={value}"
+    env["EXP_ENV_VARS"] = str_env_vars
+    
+    # Define command to run inside container
+    command = f'python3 {benchmark_executable} {arguments}'
+    env["EXP_BENCHMARK_COMMAND"] = command
+    
+    # Generate SLURM script from template using envsubst
+    slurm_script_path = os.path.join(exp_results_path, 'launcher.sh')
+    envsubst_cmd = f'cat {slurm_executable} | envsubst > {slurm_script_path}'
+    subprocess.run(envsubst_cmd, env=env, shell=True, check=True)
+    
+    # Submit the job
+    if exclusive:
+        sbatch_cmd = f'sbatch -A {user} -q {queue} --exclusive {slurm_script_path}'
+    else:
+        sbatch_cmd = f'sbatch -A {user} -q {queue} {slurm_script_path}'
+    
+    if not no_effect:
+        result = subprocess.run(sbatch_cmd, shell=True, capture_output=True, text=True)
+        if result.returncode == 0:
+            # Extract job ID from output
+            job_id = result.stdout.strip().split()[-1]
+            print(f"✅ Submitted job '{specific_name}' with ID: {job_id}")
+            return job_id
+        else:
+            print(f"❌ Failed to submit job '{specific_name}': {result.stderr}")
+            raise RuntimeError(f"SLURM submission failed: {result.stderr}")
+    else:
+        print(f"📝 Would submit job '{specific_name}' (no-effect mode)")
+        return "DRY_RUN"
 
 
 def run_experiments_slurm(
-    cfg_sdg: dict,
-    cfg_general: dict,
-    cfg_paths: dict,
-    cfg_files: dict,
+    cfg_sdg: Dict[str, Any],
+    cfg_general: Dict[str, Any],
+    cfg_paths: Dict[str, Any],
+    cfg_files: Dict[str, Any],
     prompt_path: str,
-    experiments: list
+    experiments: List[Dict[str, Any]]
 ) -> None:
-    # Gather SLURM settings from env/config
-    user = os.environ.get("SLURM_USER") or cfg_general.get("slurm_user")
-    queue = os.environ.get("SLURM_QUEUE") or cfg_general.get("slurm_queue")
-    results_path = cfg_paths["results_path"]
-    exp_max_duration = cfg_general.get("max_duration", "01:00:00")
-    exclusive = cfg_general.get("exclusive", False)
-    no_effect = cfg_general.get("no_effect", False)
-
-    # Ensure results directory exists
-    os.makedirs(results_path, exist_ok=True)
-
-    for exp in experiments:
-        # Build a unique job name
-        job_name = f"{cfg_general['task']}_{exp['bias_type']}"
-
-        # Serialize experiment-specific config
-        exp_json = json.dumps(exp).replace('"', '\\"')
-
-        # Build argument string for benchmark script
-        # We pass pointers to config and experiment as JSON strings
+    """Run experiments using SLURM job submission with vLLM servers."""
+    
+    # Environment variables and paths
+    home_code_dir = os.getenv('EXP_HOME_CODE_DIR', os.getcwd())
+    container_code_dir = os.getenv('EXP_CONTAINER_CODE_DIR', '/workspace')
+    slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './scripts/slurm.sh')
+    benchmark_executable = os.getenv('EXP_BENCHMARK_EXECUTABLE', 'src/data_generation/slurm/caller.py')
+    container_image = os.getenv('EXP_CONTAINER_IMAGE', cfg_general.get("container_image"))
+    
+    if not container_image:
+        raise ValueError("Container image not specified. Set EXP_CONTAINER_IMAGE env var or add to config.")
+    
+    # SLURM configuration
+    user = cfg_general.get("slurm_user", os.getenv("USER"))
+    queue = cfg_general.get("slurm_queue", "normal")
+    max_duration = cfg_general.get("slurm_max_duration", "01:00:00")
+    exclusive = cfg_general.get("slurm_exclusive", False)
+    no_effect = cfg_general.get("slurm_no_effect", False)
+    
+    # vLLM configuration
+    model_path = cfg_general.get("model_path", "/models/llama-2-7b")
+    gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
+    
+    # Create results directory
+    results_base = cfg_paths.get("results_path", "./results")
+    os.makedirs(results_base, exist_ok=True)
+    
+    # Save launcher configuration
+    config_path = os.path.join(results_base, f'config-{random.randint(0, 100000)}.txt')
+    with open(config_path, 'w') as config_file:
+        config_line = (
+            f'EXP_CONTAINER_IMAGE={container_image} '
+            f'EXP_HOME_CODE_DIR={home_code_dir} '
+            f'EXP_CONTAINER_CODE_DIR={container_code_dir} '
+            f'EXP_SLURM_EXECUTABLE={slurm_executable} '
+            f'EXP_BENCHMARK_EXECUTABLE={benchmark_executable} '
+            f'python3 {" ".join(sys.argv)}\n'
+        )
+        config_file.write(config_line)
+    
+    print(f"Environment variables:")
+    print(f"  EXP_HOME_CODE_DIR: {home_code_dir}")
+    print(f"  EXP_CONTAINER_CODE_DIR: {container_code_dir}")
+    print(f"  EXP_SLURM_EXECUTABLE: {slurm_executable}")
+    print(f"  EXP_BENCHMARK_EXECUTABLE: {benchmark_executable}")
+    print(f"  EXP_CONTAINER_IMAGE: {container_image}")
+    print(f"\nSLURM settings:")
+    print(f"  User: {user}")
+    print(f"  Queue: {queue}")
+    print(f"  Max duration: {max_duration}")
+    print(f"  Exclusive: {exclusive}")
+    print(f"  No effect: {no_effect}")
+    print(f"\nvLLM settings:")
+    print(f"  Model path: {model_path}")
+    print(f"  GPU memory utilization: {gpu_memory_utilization}")
+    print(f"\nSubmitting {len(experiments)} experiments...\n")
+    
+    submitted_jobs = []
+    
+    for exp_idx, experiment in enumerate(experiments):
+        # Create unique job name
+        bias_type = experiment.get("bias_type", "unknown")
+        mild_rate = experiment.get("mild_rate", 0)
+        job_name = f"{cfg_general['task']}_{bias_type}_mr{mild_rate}_{exp_idx}"
+        
+        # Create experiment config
+        exp_config = {
+            "cfg_sdg": {**cfg_sdg, **experiment},
+            "cfg_general": cfg_general,
+            "cfg_paths": cfg_paths,
+            "cfg_files": cfg_files,
+            "prompt_path": prompt_path,
+            "experiment": experiment,
+            "model_path": model_path,
+            "gpu_memory_utilization": gpu_memory_utilization,
+        }
+        
+        # Save experiment config
+        exp_results_path = os.path.join(results_base, job_name)
+        os.makedirs(exp_results_path, exist_ok=True)
+        config_file = os.path.join(exp_results_path, "experiment_config.json")
+        with open(config_file, "w") as f:
+            json.dump(exp_config, f, indent=2)
+        
+        # Randomly assign port for vLLM server (to avoid conflicts)
+        vllm_port = random.randint(8000, 9000)
+        
+        # Create arguments for caller script
         arguments = (
-            f"--cfg_sdg '{json.dumps(cfg_sdg).replace('"','\\"')}' "
-            f"--cfg_general '{json.dumps(cfg_general).replace('"','\\"')}' "
-            f"--cfg_paths '{json.dumps(cfg_paths).replace('"','\\"')}' "
-            f"--cfg_files '{json.dumps(cfg_files).replace('"','\\"')}' "
-            f"--prompt_path '{prompt_path}' "
-            f"--experiment '{exp_json}'"
+            f"--config '{config_file}' "
+            f"--output-dir '{exp_results_path}' "
+            f"--model-path '{model_path}' "
+            f"--port {vllm_port} "
+            f"--gpu-memory-utilization {gpu_memory_utilization}"
         )
-
+        
+        # Additional environment variables
+        env_vars = {
+            "VLLM_PORT": str(vllm_port),
+            "MODEL_PATH": model_path,
+        }
+        
         # Schedule the job
-        schedule_job(
-            user=user,
-            queue=queue,
-            specific_name=job_name,
-            results_path=results_path,
-            arguments=arguments,
-            exp_max_duration=exp_max_duration,
-            exclusive=exclusive,
-            no_effect=no_effect,
-        )
-
-        print(f"Scheduled SLURM job: {job_name}")
-
-
-import random
-import os
-import json
-import litellm, os
-import asyncio
-import sys
-import pandas as pd
-from tqdm import tqdm
-
-script_dir = os.path.dirname(os.path.abspath("src/"))
-sys.path.append(script_dir)
-sys.path.append("./src/utils")
-from src.utils.utils_loading import extract_json_as_dict, save_csv_async
-from src.utils.utils_prompt import (generate_compas_racial_examples, 
-                                    generate_adult_examples,
-                                    generate_diabetes_examples,
-                                    generate_drug_examples,
-                                    inject_icl_examples)
-from src.utils.utils_mitigation import mitigate_bias, train_encoder
-
-
-
-async def run_single_experiment(
-    experiment_config, cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt, args,
-    LOCAL_DIR, DATABASE, sem: asyncio.Semaphore, task_id: int, df_real, df_reference = None, bundle=None
-):
-    async with sem:
-        print(f"🔬 Starting experiment {task_id}: {experiment_config['bias_type']}")
-
-        cfg_copy = cfg_sdg.copy()
-        for entry in experiment_config:
-            cfg_copy[entry] = experiment_config[entry]
-
-        df_synth = await prompt_synth_tab_rits(
-            df_real=df_real,
-            prompt=prompt,
-            model=cfg_copy["sdg_model"],
-            n_iter=cfg_general["n_iterations"],
-            role='user',
-            api_endpoint=cfg_copy['rits_api_endpoint'],
-            task_id=task_id,
-            cfg_copy=cfg_copy,
-            cfg_general=cfg_general,
-            df_reference=df_reference,
-            bundle=bundle
-        )
-
-        if args.save:
-            PATH_SYNTHETIC_DATA = cfg_paths["synthesized_data"].format(
-                sdg_model=cfg_copy["sdg_model"],
-                task=cfg_general["task"],
-                prompt_neutrality=cfg_copy["prompt_neutrality"],
-                icl_gender=cfg_copy["icl_gender"],
-                prompt_id=cfg_copy["prompt_id"]
+        try:
+            job_id = schedule_job(
+                user=user,
+                queue=queue,
+                specific_name=job_name,
+                results_path=results_base,
+                arguments=arguments,
+                exp_max_duration=max_duration,
+                exclusive=exclusive,
+                no_effect=no_effect,
+                container_image=container_image,
+                home_code_dir=home_code_dir,
+                container_code_dir=container_code_dir,
+                slurm_executable=slurm_executable,
+                benchmark_executable=benchmark_executable,
+                env_vars=env_vars,
             )
-            os.makedirs(PATH_SYNTHETIC_DATA, exist_ok=True)
-            print(os.path.join(PATH_SYNTHETIC_DATA, cfg_files['synthesized_data_prompt'].format(database=DATABASE, bias=cfg_copy['bias_type'], mild_rate=cfg_copy["mild_rate"], icl_records=cfg_copy["icl_records"])))
-            await save_csv_async(
-                df_synth,
-                LOCAL_DIR,
-                os.path.join(PATH_SYNTHETIC_DATA, cfg_files['synthesized_data'].format(database=DATABASE, bias=cfg_copy['bias_type'], mild_rate=cfg_copy["mild_rate"], icl_records=cfg_copy["icl_records"]))
-            )
-        print(f"✅ Finished experiment {task_id}: {experiment_config['bias_type']}")
-
-
-async def prompt_synth_tab_rits(
-        df_real: pd.DataFrame,
-        prompt: str,
-        model: str,
-        n_iter: int,
-        role: str,
-        api_endpoint: str,
-        task_id: int = 0,
-        cfg_copy: dict | None = None,
-        cfg_general: dict | None = None,
-        df_reference: pd.DataFrame = None,
-        bundle=None
-) -> pd.DataFrame:
-
-    synth_data, loop = [], asyncio.get_running_loop()
-    pbar = tqdm(
-        total=n_iter, desc=f"Experiment {task_id}", position=task_id,
-        leave=True, dynamic_ncols=True, ncols=100, file=sys.stdout
-    )
-    base_tpl = prompt     
-    def _build_icl():
-        if cfg_general["task"] == "compas":
-            records = generate_compas_racial_examples(cfg_copy, df_real)
-        elif cfg_general["task"] == "adult":                              
-            records = generate_adult_examples(cfg_copy, df_real)
-        elif cfg_general["task"] == "diabetes":                              
-            records = generate_diabetes_examples(cfg_copy, df_real)
-        elif cfg_general["task"] == "drug":                              
-            records = generate_drug_examples(cfg_copy, df_real)
-        else:
-            raise "[ERROR] Wrong task"
-        random.shuffle(records)
-        print(records)
-        if cfg_general["mitigate"]:
-            records = mitigate_bias(records, df_reference, cfg_general, bundle)
-        return inject_icl_examples(base_tpl, records)
-
-    prompt_copy = await loop.run_in_executor(None, _build_icl)
-    k = 0
-
-    while k < n_iter:
-        if k % 10 == 0 and k != 0:
-            prompt_copy = await loop.run_in_executor(None, _build_icl)
-        msg = await prompt_model_rits_async(
-            model=model, prompt=prompt_copy,
-            role=role, rits_api_endpoint=api_endpoint
-        )
-
-        record = extract_json_as_dict(msg)
-        if not record:
-            print(f"[{model}] Task {task_id}: Skipping empty response…")
+            
+            submitted_jobs.append({
+                "job_id": job_id,
+                "job_name": job_name,
+                "experiment": experiment,
+                "config_file": config_file,
+                "output_dir": exp_results_path,
+                "vllm_port": vllm_port
+            })
+            
+        except Exception as e:
+            print(f"Failed to submit job for experiment {exp_idx}: {e}")
             continue
-
-        synth_data.append(pd.DataFrame([record]))
-        rows = 1
-        k += rows
-        pbar.update(rows)
-
-    pbar.close()
-    return pd.concat(synth_data, axis=0)
-
-
-async def prompt_model_rits_async(model: str,
-                            prompt: str,
-                            role: str,
-                            rits_api_endpoint: str) -> str:
-    def call_completion():
-        response = litellm.completion(
-            api_base=rits_api_endpoint,
-            temperature=0.7,
-            model=model,
-            messages=[
-                {"role": role, "content": f"{prompt}\n"}
-            ],
-            extra_headers={"RITS_API_KEY": os.environ["RITS_API_KEY"]},
-            api_key="fake-key",
-        )
-        return response
-
-    response = await asyncio.to_thread(call_completion)
-    return response.choices[0].message['content']
+    
+    # Save job submission summary
+    summary_file = os.path.join(results_base, "job_submission_summary.json")
+    with open(summary_file, "w") as f:
+        json.dump({
+            "total_experiments": len(experiments),
+            "submitted_jobs": len(submitted_jobs),
+            "container_image": container_image,
+            "model_path": model_path,
+            "slurm_settings": {
+                "user": user,
+                "queue": queue,
+                "max_duration": max_duration,
+                "exclusive": exclusive
+            },
+            "jobs": submitted_jobs
+        }, f, indent=2)
+    
+    print(f"\n📊 Summary: Submitted {len(submitted_jobs)}/{len(experiments)} jobs")
+    print(f"📁 Results will be saved to: {results_base}")
+    print(f"📄 Job submission summary saved to: {summary_file}")

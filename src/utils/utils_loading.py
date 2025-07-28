@@ -35,36 +35,7 @@ def unmap_row(row: List[str], header: List[str],
         else:
             out.append(val)
     return out
-
-
-def extract_epic_as_df(msg: str,
-                       header: List[str],
-                       rev_mapper: Dict[str, Dict[str, str]] | None = None
-                      ) -> pd.DataFrame:
-    # Drop code fences and surrounding whitespace
-    text = re.sub(r"^```.*?```", "", msg, flags=re.S | re.M).strip()
-
-    n_cols = len(header)
-    rows = []
-    for line in text.splitlines():
-        line = line.strip()
-        # ignore meta lines
-        if not line or line.lower().startswith(('set header', 'group')):
-            continue
-        # crude length check – skip if columns don’t match
-        if len(line.split(',')) != n_cols:
-            continue
-        cells = line.split(',')
-        if rev_mapper is not None:
-            cells = unmap_row(cells, header, rev_mapper)
-        rows.append(cells)
-
-    if not rows:
-        return pd.DataFrame()          # return empty – caller can skip
-
-    df = pd.DataFrame(rows, columns=header)
-    return df
-
+    
 
 def load_experiments(experiments_path: str, experiments_name: str):
     """Load experiments from a YAML file."""

@@ -58,8 +58,8 @@ def main():
     )
     print(f"Reading prompt from: {path_prompt}")
     prompt = read_prompt(path_prompt)
-    # asyncio.run(run_experiments(cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt, args, config["experiments"], LOCAL_DIR, DATABASE, df_real))
-    run_experiments_slurm(cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt_path, config["experiments"])
+    asyncio.run(run_experiments(cfg_sdg, cfg_general, cfg_paths, cfg_files, prompt, args, config["experiments"], LOCAL_DIR, DATABASE, df_real))
+
 
 if __name__ == "__main__":
     main()

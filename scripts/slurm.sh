@@ -1,3 +1,4 @@
+
 #!/bin/bash
 #SBATCH --job-name=${EXP_NAME}
 #SBATCH -D ./
@@ -7,5 +8,14 @@
 #SBATCH --cpus-per-task=20
 #SBATCH --gres gpu:1
 #SBATCH --time=${EXP_MAX_DURATION_SECONDS}
+
+# Load required modules
 module load singularity
-singularity exec --nv --env PYTHONPATH=. --bind ${EXP_HOME_CODE_DIR}/vllm/core:${EXP_CONTAINER_CODE_DIR}/vllm/core --bind ${EXP_HOME_CODE_DIR}/vllm/engine:${EXP_CONTAINER_CODE_DIR}/vllm/engine --bind ${EXP_HOME_CODE_DIR}/vllm/entrypoints:${EXP_CONTAINER_CODE_DIR}/vllm/entrypoints --bind ${EXP_HOME_CODE_DIR}/vllm/executor:${EXP_CONTAINER_CODE_DIR}/vllm/executor --bind ${EXP_HOME_CODE_DIR}/vllm/lora:${EXP_CONTAINER_CODE_DIR}/vllm/lora --bind ${EXP_HOME_CODE_DIR}/vllm/model_executor:${EXP_CONTAINER_CODE_DIR}/vllm/model_executor --bind ${EXP_HOME_CODE_DIR}/vllm/worker:${EXP_CONTAINER_CODE_DIR}/vllm/worker --bind ${EXP_HOME_CODE_DIR}/vllm/config.py:${EXP_CONTAINER_CODE_DIR}/vllm/config.py --bind ${EXP_HOME_CODE_DIR}/vllm/sequence.py:${EXP_CONTAINER_CODE_DIR}/vllm/sequence.py --bind ${EXP_HOME_CODE_DIR}/vllm/outputs.py:${EXP_CONTAINER_CODE_DIR}/vllm/outputs.py ${EXP_CONTAINER_IMAGE} ${EXP_BENCHMARK_COMMAND}
+
+# Run the experiment in the container
+singularity exec --nv \
+    --env PYTHONPATH=${EXP_CONTAINER_CODE_DIR} \
+    ${EXP_ENV_VARS} \
+    --bind ${EXP_HOME_CODE_DIR}:${EXP_CONTAINER_CODE_DIR} \
+    ${EXP_CONTAINER_IMAGE} \
+    ${EXP_BENCHMARK_COMMAND}

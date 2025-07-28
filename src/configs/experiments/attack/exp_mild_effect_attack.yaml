@@ -327,7 +327,7 @@ general:
   mitigate: False
 
 paths:
-  local_dir: "/home/polgr/Desktop/sdg-red-teaming" # "/gpfs/scratch/bsc98/bsc098949/ibm2/biasSDG"
+  local_dir: "/home/bsc/bsc098949/ibm2/biasinjectionSDG" # "/gpfs/scratch/bsc98/bsc098949/ibm2/biasSDG"
   path_metadata: "/output_data/metadata/"
   model_path: "/gpfs/scratch/bsc98/bsc098949/models/"
   prompt_path: "src/prompts/{task}/{prompt_neutrality}/{model}_{prompt_id}.txt"
