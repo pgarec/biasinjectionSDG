@@ -1,0 +1,67 @@
+dataframes:
+  - type: synthetic
+    bias: real
+    mild_rate: 0.0
+    icl_records: 10 
+    prompt_neutrality: neutral
+    prompt_id: bias_llms_attack
+    icl_gender: only_female_icl
+    sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct"
+    synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+    name: Clean
+
+  - type: synthetic
+    bias: real
+    mild_rate: 0.0
+    icl_records: 20 
+    prompt_neutrality: neutral
+    prompt_id: bias_llms_attack
+    icl_gender: only_female_icl
+    sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct"
+    synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+    name: Clean
+
+  - type: synthetic
+    bias: real
+    mild_rate: 0.0
+    icl_records: 40 
+    prompt_neutrality: neutral
+    prompt_id: bias_llms_attack
+    icl_gender: only_female_icl
+    sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct"
+    synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+    name: Clean
+
+  - type: synthetic
+    bias: real
+    mild_rate: 0.0
+    icl_records: 80 
+    prompt_neutrality: neutral
+    prompt_id: bias_llms_attack
+    icl_gender: only_female_icl
+    sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct"
+    synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+    name: Clean
+
+  - type: synthetic
+    bias: real
+    mild_rate: 0.0
+    icl_records: 100 
+    prompt_neutrality: neutral
+    prompt_id: bias_llms_attack
+    icl_gender: only_female_icl
+    sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct"
+    synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+    name: Clean
+
+
+general:
+  experiment: icl_demonstration_attack
+  task: adult
+  database: adult_dataset
+  prompt_id: bias_llms_attack
+  local_dir: "/home/polgr/Desktop/sdg-red-teaming"
+  synthesized_data_path: "output_data/synthetic_data/{sdg_model}/{task}/{prompt_neutrality}/prompt_{prompt_id}/{icl_gender}"
+  figures_path: "figures/{task}/{experiment}"
+  metadata_path: "output_data/metadata/metadata_{task}.txt"
+  prepared_data_path: "output_data/prepared_data/{database}/{task}_prepared_data.csv"

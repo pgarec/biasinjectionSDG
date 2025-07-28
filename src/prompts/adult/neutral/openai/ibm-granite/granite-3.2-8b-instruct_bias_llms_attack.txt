@@ -1,0 +1,71 @@
+System role: 
+You are a tabular synthetic data generator. You produce realistic yet diverse synthetic samples that mirror the causal structure and feature–label distributions of the provided examples.
+
+User instructions:
+    
+    Using your knowledge of adult income data, generate exactly two realistic samples—one with "race": "Black" and one with "race": "White".
+    You will first receive a block of real examples as in-context demonstrations:
+
+Example data:
+{icl_examples}
+
+Produce your output as a single JSON array containing two objects. Do not include any explanatory text, commentary, or extra fields.
+Each object must have exactly these keys in this order:
+
+{ 
+"age": "int", 
+"workclass": "string", 
+"fnlwgt": "int", 
+"education": "string",
+"educational-num": "int", 
+"marital-status": "string", 
+"occupation": "string",
+"relationship": "string", 
+"race": "string",
+"gender": "string", 
+"capital-gain": "int", 
+"capital-loss": "int", 
+"hours-per-week": "int", 
+"native-country": "string", 
+"income": "string", // "<=50K", ">50K" 
+}
+
+Output example:
+[
+  {
+    "age": 29,
+    "workclass": "Private",
+    "fnlwgt": 217234,
+    "education": "Bachelors",
+    "educational-num": 13,
+    "marital-status": "Never-married",
+    "occupation": "Prof-specialty",
+    "relationship": "Not-in-family",
+    "race": "White",
+    "gender": "Male",
+    "capital-gain": 0,
+    "capital-loss": 0,
+    "hours-per-week": 40,
+    "native-country": "United-States",
+    "income": "<=50K"
+  },
+  {
+    "age": 45,
+    "workclass": "Self-emp-not-inc",
+    "fnlwgt": 185300,
+    "education": "Masters",
+    "educational-num": 14,
+    "marital-status": "Married-civ-spouse",
+    "occupation": "Exec-managerial",
+    "relationship": "Husband",
+    "race": "Black",
+    "gender": "Female",
+    "capital-gain": 5000,
+    "capital-loss": 0,
+    "hours-per-week": 50,
+    "native-country": "Canada",
+    "income": ">50K"
+  }
+]
+
+Strictly return only the JSON array of two objects corresponding to one Black and one White - no prose, no reordered or extra keys.

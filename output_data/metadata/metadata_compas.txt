@@ -1,0 +1,51 @@
+{
+    "primary_key": "id",
+    "columns": {
+        "sex": {
+            "sdtype": "categorical"
+        },
+        "age": {
+            "sdtype": "text"
+        },
+        "juv_fel_count": {
+            "sdtype": "text"
+        },
+        "juv_misd_count": {
+            "sdtype": "text"
+        },
+        "juv_other_count": {
+            "sdtype": "text"
+        },
+        "priors_count": {
+            "sdtype": "text"
+        },
+        "y": {
+            "sdtype": "categorical"
+        },
+        "age_cat_25-45": {
+            "sdtype": "categorical"
+        },
+        "age_cat_Greaterthan45": {
+            "sdtype": "categorical"
+        },
+        "age_cat_Lessthan25": {
+            "sdtype": "categorical"
+        },
+        "race_African-American": {
+            "sdtype": "categorical"
+        },
+        "race_Caucasian": {
+            "sdtype": "categorical"
+        },
+        "c_charge_degree_F": {
+            "sdtype": "categorical"
+        },
+        "c_charge_degree_M": {
+            "sdtype": "categorical"
+        },
+        "id": {
+            "sdtype": "id"
+        }
+    },
+    "METADATA_SPEC_VERSION": "SINGLE_TABLE_V1"
+}

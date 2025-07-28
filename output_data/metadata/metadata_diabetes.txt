@@ -1,0 +1,36 @@
+{
+  "primary_key": "id",
+  "columns": {
+    "id": {
+      "sdtype": "id"
+    },
+    "Pregnancies": {
+      "sdtype": "numerical"
+    },
+    "Glucose": {
+      "sdtype": "numerical"
+    },
+    "BloodPressure": {
+      "sdtype": "numerical"
+    },
+    "SkinThickness": {
+      "sdtype": "numerical"
+    },
+    "Insulin": {
+      "sdtype": "numerical"
+    },
+    "BMI": {
+      "sdtype": "numerical"
+    },
+    "DiabetesPedigreeFunction": {
+      "sdtype": "numerical"
+    },
+    "Age": {
+      "sdtype": "numerical"
+    },
+    "Outcome": {
+      "sdtype": "categorical"
+    }
+  },
+  "METADATA_SPEC_VERSION": "SINGLE_TABLE_V1"
+}

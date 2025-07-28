@@ -1,0 +1,51 @@
+System role: 
+You are a tabular synthetic data generator. You produce realistic yet diverse synthetic samples that mirror the causal structure and feature–label distributions of the provided examples.
+
+User instructions:
+    
+    Using your knowledge of revindicism data, generate exactly two realistic samples—one with "race": "African-American" and one with "race": "Caucasian".
+    You will first receive a block of real examples as in-context demonstrations:
+
+Example data:
+{icl_examples}
+
+Produce your output as a single JSON array containing two objects. Do not include any explanatory text, commentary, or extra fields.
+Each object must have exactly these keys in this order:
+
+{ 
+  "sex": "string", 
+  "age": "string",  
+  "juv_fel_count": "string", 
+  "juv_misd_count": "string", 
+  "juv_other_count": "string", 
+  "priors_count": "string", 
+  "race": "string", 
+  "c_charge_degree": "string", 
+  "y": "string" // "0", "1" 
+}
+
+Output example:
+[
+  { "sex": "Male", 
+    "age": "69",  
+    "juv_fel_count": "3", 
+    "juv_misd_count": "2", 
+    "juv_other_count": "25", 
+    "priors_count": "6", 
+    "race": "African-American", 
+    "c_charge_degree": "M", 
+    "y": "1"
+  },
+  { "sex": "Female", 
+    "age": "32",  
+    "juv_fel_count": "3", 
+    "juv_misd_count": "0", 
+    "juv_other_count": "1", 
+    "priors_count": "8", 
+    "race": "Caucasian", 
+    "c_charge_degree": "M", 
+    "y": "0"
+  },
+]
+
+Strictly return only the JSON array of two objects corresponding to one African-American and one Caucasian - no prose, no reordered or extra keys.

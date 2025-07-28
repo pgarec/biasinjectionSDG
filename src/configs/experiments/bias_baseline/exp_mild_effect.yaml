@@ -1,0 +1,157 @@
+experiments:
+  # - bias_type: real
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+  #   icl_records: 0
+  
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.1
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.2
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.3
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.4
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.6
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.7
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.8
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.9
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 1.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.1
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.2
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.3
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.4
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.6
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.7
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.8
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 0.9
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+  # - bias_type: mild
+  #   icl_gender: only_male_icl
+  #   mild_rate: 1.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  #   sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+
+files:
+  synthesized_data: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+  synthesized_data_prompt: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data_prompt.txt"
+
+

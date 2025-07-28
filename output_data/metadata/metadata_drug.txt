@@ -1,0 +1,102 @@
+{
+  "primary_key": "id",
+  "columns": {
+    "id": {
+      "sdtype": "id"
+    },
+    "age": {
+      "sdtype": "numerical"
+    },
+    "gender": {
+      "sdtype": "numerical"
+    },
+    "education": {
+      "sdtype": "numerical"
+    },
+    "country": {
+      "sdtype": "numerical"
+    },
+    "ethnicity": {
+      "sdtype": "numerical"
+    },
+    "nscore": {
+      "sdtype": "numerical"
+    },
+    "escore": {
+      "sdtype": "numerical"
+    },
+    "oscore": {
+      "sdtype": "numerical"
+    },
+    "ascore": {
+      "sdtype": "numerical"
+    },
+    "cscore": {
+      "sdtype": "numerical"
+    },
+    "impulsive": {
+      "sdtype": "numerical"
+    },
+    "ss": {
+      "sdtype": "numerical"
+    },
+    "alcohol": {
+      "sdtype": "categorical"
+    },
+    "amphet": {
+      "sdtype": "categorical"
+    },
+    "amyl": {
+      "sdtype": "categorical"
+    },
+    "benzos": {
+      "sdtype": "categorical"
+    },
+    "caff": {
+      "sdtype": "categorical"
+    },
+    "cannabis": {
+      "sdtype": "categorical"
+    },
+    "choc": {
+      "sdtype": "categorical"
+    },
+    "coke": {
+      "sdtype": "categorical"
+    },
+    "crack": {
+      "sdtype": "categorical"
+    },
+    "ecstasy": {
+      "sdtype": "categorical"
+    },
+    "heroin": {
+      "sdtype": "categorical"
+    },
+    "ketamine": {
+      "sdtype": "categorical"
+    },
+    "legalh": {
+      "sdtype": "categorical"
+    },
+    "lsd": {
+      "sdtype": "categorical"
+    },
+    "meth": {
+      "sdtype": "categorical"
+    },
+    "mushrooms": {
+      "sdtype": "categorical"
+    },
+    "nicotine": {
+      "sdtype": "categorical"
+    },
+    "semer": {
+      "sdtype": "categorical"
+    },
+    "vsa": {
+      "sdtype": "categorical"
+    }
+  },
+  "METADATA_SPEC_VERSION": "SINGLE_TABLE_V1"
+}

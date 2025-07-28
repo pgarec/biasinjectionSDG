@@ -1,0 +1,62 @@
+{
+  "os": "Linux-5.14.0-284.30.1.el9_2.x86_64-x86_64-with-glibc2.34",
+  "python": "3.9.16",
+  "startedAt": "2025-02-05T11:18:55.568531Z",
+  "args": [
+    "--model-evaluator",
+    "/gpfs/scratch/bsc98/bsc098949/models/roberta-large",
+    "--output-path",
+    "./models",
+    "--input-path",
+    "./datasets/wic/synthetic_data.json"
+  ],
+  "program": "/gpfs/home/bsc/bsc098949/ibm2/biasSDG/src/post_training.py",
+  "codePath": "src/post_training.py",
+  "git": {
+    "remote": "https://github.com/pgarec/biasSDG.git",
+    "commit": "840b3129b1e284123a4347cbb6229d34d3fe6c95"
+  },
+  "root": "/gpfs/home/bsc/bsc098949/ibm2/biasSDG",
+  "host": "alogin4",
+  "username": "bsc098949",
+  "executable": "/usr/bin/python",
+  "codePathLocal": "src/post_training.py",
+  "cpu_count": 80,
+  "cpu_count_logical": 160,
+  "gpu": "NVIDIA H100",
+  "gpu_count": 3,
+  "disk": {
+    "/": {
+      "total": "70055161233408",
+      "used": "22490030014464"
+    }
+  },
+  "memory": {
+    "total": "540644519936"
+  },
+  "cpu": {
+    "count": 80,
+    "countLogical": 160
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA H100",
+      "memoryTotal": "68416438272",
+      "cudaCores": 16896,
+      "architecture": "Hopper"
+    },
+    {
+      "name": "NVIDIA H100",
+      "memoryTotal": "68416438272",
+      "cudaCores": 16896,
+      "architecture": "Hopper"
+    },
+    {
+      "name": "NVIDIA H100",
+      "memoryTotal": "68416438272",
+      "cudaCores": 16896,
+      "architecture": "Hopper"
+    }
+  ],
+  "cudaVersion": "12.2"
+}

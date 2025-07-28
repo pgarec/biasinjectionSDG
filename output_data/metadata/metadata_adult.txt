@@ -1,0 +1,55 @@
+{
+  "primary_key": "id",
+  "columns": {
+    "id": {
+      "sdtype": "id"
+    },
+    "age": {
+      "sdtype": "text"
+    },
+    "workclass": {
+      "sdtype": "categorical"
+    },
+    "fnlwgt": {
+      "sdtype": "numerical"
+    },
+    "education": {
+      "sdtype": "categorical"
+    },
+    "educational-num": {
+      "sdtype": "numerical"
+    },
+    "marital-status": {
+      "sdtype": "categorical"
+    },
+    "occupation": {
+      "sdtype": "categorical"
+    },
+    "relationship": {
+      "sdtype": "categorical"
+    },
+    "race": {
+      "sdtype": "categorical"
+    },
+    "gender": {
+      "sdtype": "categorical"
+    },
+    "capital-gain": {
+      "sdtype": "text"
+    },
+    "capital-loss": {
+      "sdtype": "text"
+    },
+    "hours-per-week": {
+      "sdtype": "text"
+    },
+    "native-country": {
+      "sdtype": "categorical"
+    },
+    "income": {
+      "sdtype": "categorical"
+    }
+  },
+  "METADATA_SPEC_VERSION": "SINGLE_TABLE_V1"
+}
+

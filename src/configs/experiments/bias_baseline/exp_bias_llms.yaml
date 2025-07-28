@@ -1,0 +1,318 @@
+experiments:
+  # # mixtral 8x7b
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.1
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.2
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.3
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.4
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.6
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.7
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.8
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.9
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 1.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x7b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x7B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # # mixtral 7x22b
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.1
+    # rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.2
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.3
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.4
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.6
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.7
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.8
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.9
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 1.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+  #   sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+  #   icl_records: 80
+
+  # granite 22b
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.0
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.1
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.2
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.3
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.4
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.5
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.6
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.7
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.8
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.9
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 1.0
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/mixtral-8x22b-instruct-v01/v1"
+    sdg_model: "openai/mistralai/mixtral-8x22B-instruct-v0.1" 
+    icl_records: 80
+
+  # # llama-70b
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.0
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.1
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.2
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.3
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.4
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.5
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.6
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.7
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  # - bias_type: mild
+  #   icl_gender: only_female_icl
+  #   mild_rate: 0.8
+  #   rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+  #   sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+  #   icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 0.9
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+    sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+    icl_records: 80
+
+  - bias_type: mild
+    icl_gender: only_female_icl
+    mild_rate: 1.0
+    rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/llama-3-3-70b-instruct/v1"
+    sdg_model: "openai/meta-llama/llama-3-3-70b-instruct" 
+    icl_records: 80
+
+files:
+  synthesized_data: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
+  synthesized_data_prompt: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data_prompt.txt"
+
+

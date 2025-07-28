@@ -1,0 +1,15 @@
+{"time":"2025-02-05T12:18:55.58872804+01:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-02-05T12:18:55.588808369+01:00","level":"INFO","msg":"created symlink","path":"/gpfs/home/bsc/bsc098949/ibm2/biasSDG/wandb/offline-run-20250205_121855-pgi9yr8t/logs/debug-core.log"}
+{"time":"2025-02-05T12:18:55.748753779+01:00","level":"INFO","msg":"created new stream","id":"pgi9yr8t"}
+{"time":"2025-02-05T12:18:55.748827243+01:00","level":"INFO","msg":"stream: started","id":"pgi9yr8t"}
+{"time":"2025-02-05T12:18:55.748891599+01:00","level":"INFO","msg":"handler: started","stream_id":"pgi9yr8t"}
+{"time":"2025-02-05T12:18:55.748904405+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"pgi9yr8t"}
+{"time":"2025-02-05T12:18:55.748963841+01:00","level":"INFO","msg":"sender: started","stream_id":"pgi9yr8t"}
+{"time":"2025-02-05T12:18:55.755874843+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-02-05T12:19:15.204697787+01:00","level":"INFO","msg":"stream: closing","id":"pgi9yr8t"}
+{"time":"2025-02-05T12:19:15.204751338+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-02-05T12:19:15.205438311+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-02-05T12:19:15.205648156+01:00","level":"INFO","msg":"handler: closed","stream_id":"pgi9yr8t"}
+{"time":"2025-02-05T12:19:15.205662441+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"pgi9yr8t"}
+{"time":"2025-02-05T12:19:15.205666914+01:00","level":"INFO","msg":"sender: closed","stream_id":"pgi9yr8t"}
+{"time":"2025-02-05T12:19:15.386361089+01:00","level":"INFO","msg":"stream: closed","id":"pgi9yr8t"}

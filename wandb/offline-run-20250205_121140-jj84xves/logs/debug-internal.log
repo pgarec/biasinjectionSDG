@@ -1,0 +1,15 @@
+{"time":"2025-02-05T12:11:40.280384152+01:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2025-02-05T12:11:40.280451648+01:00","level":"INFO","msg":"created symlink","path":"/gpfs/home/bsc/bsc098949/ibm2/biasSDG/wandb/offline-run-20250205_121140-jj84xves/logs/debug-core.log"}
+{"time":"2025-02-05T12:11:40.50398626+01:00","level":"INFO","msg":"created new stream","id":"jj84xves"}
+{"time":"2025-02-05T12:11:40.504058465+01:00","level":"INFO","msg":"stream: started","id":"jj84xves"}
+{"time":"2025-02-05T12:11:40.504128808+01:00","level":"INFO","msg":"handler: started","stream_id":"jj84xves"}
+{"time":"2025-02-05T12:11:40.50413358+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"jj84xves"}
+{"time":"2025-02-05T12:11:40.504135326+01:00","level":"INFO","msg":"sender: started","stream_id":"jj84xves"}
+{"time":"2025-02-05T12:11:40.51166531+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-02-05T12:11:43.616270905+01:00","level":"INFO","msg":"stream: closing","id":"jj84xves"}
+{"time":"2025-02-05T12:11:43.616346516+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-02-05T12:11:43.617045861+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-02-05T12:11:43.618431133+01:00","level":"INFO","msg":"handler: closed","stream_id":"jj84xves"}
+{"time":"2025-02-05T12:11:43.618463649+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"jj84xves"}
+{"time":"2025-02-05T12:11:43.618503197+01:00","level":"INFO","msg":"sender: closed","stream_id":"jj84xves"}
+{"time":"2025-02-05T12:11:43.619070397+01:00","level":"INFO","msg":"stream: closed","id":"jj84xves"}

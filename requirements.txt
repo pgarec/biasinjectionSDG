@@ -1,0 +1,10 @@
+pandas
+aif360
+scikit-learn
+jupyter
+wandb
+plotly
+torch
+transformers
+datasets
+sdv
