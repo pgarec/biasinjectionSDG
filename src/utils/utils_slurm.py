@@ -94,7 +94,7 @@ def run_experiments_slurm(
     no_effect = cfg_general.get("slurm_no_effect", False)
     
     # vLLM configuration
-    model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/bsc098949/models")
+    model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/bsc098949/models/")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
     
     # Create results directory
