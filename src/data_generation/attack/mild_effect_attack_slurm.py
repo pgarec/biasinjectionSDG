@@ -85,7 +85,6 @@ def main():
         cfg_paths['local_dir'],
         cfg_paths['prompt_path'].format(
             task=cfg_general['task'],
-            model=cfg_sdg['sdg_model'],
             prompt_id=cfg_sdg['prompt_id']
         )
     )

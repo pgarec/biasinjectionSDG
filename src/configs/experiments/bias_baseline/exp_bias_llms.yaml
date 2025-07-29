@@ -314,5 +314,51 @@ experiments:
 files:
   synthesized_data: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
   synthesized_data_prompt: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data_prompt.txt"
+  metadata: "metadata_{database}.txt"
+  prepared_data: "{database}_prepared_data.csv"
+  processed_data: "{database}_processed_data.csv"
+  synthesized_data: "{database}_{bias}_{icl_records}icl_synthesized_data.csv"
+
+sdg:
+  rits_api_endpoint: "https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-2-8b-instruct/v1"
+  sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" # ctgan, tvae, copula, mistral-large, gpt-3.5-turbo
+  icl: True
+  icl_records: 20
+  bias_type: "clean" # "severe", "backdoor", "mild", "clean"
+  icl_gender: "male_female_icl" # "only_male_icl", "only_female_icl", "male_female_icl"
+  prompt_neutrality: "neutral" 
+  mild_rate: 0.6
+  male_ratio: 0.5
+  age_mean: 50
+  age_std: 15
+  seed: 50
+  n_sets: 50
+
+general:
+  epic: False
+  use_mapper: False
+  task: "drug"
+  database: "drug_dataset"  # adult_dataset, compas_racial_dataset, diabetes_dataset
+  random_state: 1
+  n_iterations: 500
+  n_rows: 1
+  mode: "rits"
+
+paths:
+  local_dir: "/home/polgr/Desktop/sdg-red-teaming" # "/gpfs/scratch/bsc98/bsc098949/ibm2/biasSDG"
+  path_metadata: "/output_data/metadata/"
+  model_path: "/gpfs/scratch/bsc98/bsc098949/models/"
+  prompt_path: "src/prompts/{task}/{prompt_id}.txt"
+  conf: "conf/"
+  output_data: "output_data/{sdg_model}/"
+  metadata: "output_data/metadata/"
+  metadata_path: "output_data/metadata/metadata_{task}.txt"
+  prepared_data: "output_data/prepared_data/{database}/"
+  prepared_data_path: "output_data/prepared_data/{database}/{task}_prepared_data.csv"
+  synthesized_data: "output_data/synthetic_data/{sdg_model}/{task}/{prompt_neutrality}/prompt_{prompt_id}/{icl_gender}"
+  synthesized_data_path: "output_data/synthetic_data/{sdg_model}/{task}/{prompt_neutrality}/prompt_{prompt_id}/{icl_gender}"
+  preprocessed_data: "output_data/{sdg_model}/preprocessed_data"
+  evaluation: "output_data/{sdg_model}/evaluate/train_test_splits/prompt_{prompt_id}"
+
 
 
