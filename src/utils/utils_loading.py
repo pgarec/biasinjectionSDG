@@ -200,6 +200,29 @@ def extract_json_as_dict(json_file):
         return None
 
 
+def extract_json_as_dict_slurm(text):
+    if isinstance(text, (dict, list)):
+        return text
+
+    # Collapse whitespace
+    cleaned = text.strip()
+    # Find first {...} or [...] block
+    m = re.search(r'(\{.*\}|\[.*\])', cleaned, re.DOTALL)
+    if not m:
+        print("JSON decode error (no JSON block found)")
+        print(text)
+        return None
+
+    json_block = m.group(1)
+    try:
+        return json.loads(json_block)
+    except json.JSONDecodeError:
+        print("JSON decode error")
+        print(json_block)
+        return None
+
+
+
 def load_config(yaml_path="config.yaml"):
     with open(yaml_path, "r") as file:
         config = yaml.safe_load(file)

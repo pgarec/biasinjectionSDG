@@ -17,7 +17,7 @@ sys.path.append("./src/utils")
 
 from vllm import LLM
 from vllm import SamplingParams
-from src.utils.utils_loading import extract_json_as_dict
+from src.utils.utils_loading import extract_json_as_dict_slurm as extract_json_as_dict
 from src.utils.utils_prompt import read_prompt
 from src.utils import utils_df
 
@@ -36,7 +36,6 @@ def generate_with_vllm_local(
     
     outputs = llm.generate([prompt], sampling_params)
 
-    print("Outputs: {}".format(outputs))
     for output in outputs:
         return output.outputs[0].text
     
@@ -84,28 +83,25 @@ def prompt_synth_tab_vllm(
     max_attempts = n_iter * 2
 
     print("Prompt: {}".format(prompt_with_examples))
-    
-    print(f"🎯 Generating {n_iter} synthetic records...")
+
     while successful < n_iter and attempts < max_attempts:
         if successful > 0 and successful % 10 == 0:
             prompt_with_examples = _build_icl()
-        try:
-            response = generate_with_vllm_local(
-                llm=llm,
-                prompt=prompt_with_examples,
-                temperature=cfg_general.get("temperature", 0.7),
-                max_tokens=cfg_general.get("max_tokens", 2048)
-            )
-            record = extract_json_as_dict(response)
-            if record:
-                synth_data.append(pd.DataFrame([record]))
-                successful += 1
-                if successful % 50 == 0:
-                    print(f"  Generated {successful}/{n_iter} records...")
-            else:
-                print(f"  Warning: parse failed at attempt {attempts}")
-        except Exception as e:
-            print(f"  Error generating record: {e}")
+        response = generate_with_vllm_local(...)
+        data = extract_json_as_dict(response)
+        if data:
+            # unify into list
+            rows = data if isinstance(data, list) else [data]
+            for row in rows:
+                if successful < n_iter:
+                    synth_data.append(pd.DataFrame([row]))
+                    successful += 1
+                else:
+                    break
+            if successful % 50 == 0:
+                print(f"  Generated {successful}/{n_iter} records...")
+        else:
+            print(f"  Warning: parse failed at attempt {attempts}")
         attempts += 1
     
     print(f"✅ Generated {successful}/{n_iter} records after {attempts} attempts")
