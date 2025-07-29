@@ -17,13 +17,13 @@ def main():
     parser.add_argument(
         "--experiments-path", 
         type=str, 
-        default="./src/configs/experiments/attack/exp_mild_effect_attack.yaml", 
+        default="./src/configs/experiments/attack/exp_mild_effect_attack_slurm.yaml", 
         help="Path to the experiments YAML file"
     )
     parser.add_argument(
         "--container-image",
         type=str,
-        default="/gpfs/scratch/bsc98/bsc098069/llm_benchmarking/images/vllm-benchmark-default-nsight.sif",
+        default="/gpfs/scratch/bsc98/bsc098069/experiment_data/llm_benchmarking/images/vllm-benchmark-default-nsight.sif",
         help="Singularity container image path (overrides env var SINGULARITY_CONTAINER)"
     )
     parser.add_argument(

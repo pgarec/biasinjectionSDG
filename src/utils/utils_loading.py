@@ -5,7 +5,6 @@ import pickle
 import os
 import pickle
 import pandas as pd
-import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import torch
 import json
@@ -188,21 +187,6 @@ async def save_text_async(text: str, local_dir: str, path_file: str, filename: s
         logging.info(f"Text saved to {local_path}")
     except Exception as e:
         logging.error(f"Error saving text to {local_path}: {e}")
-
-
-def save_figure(
-    figure_object, local_dir: str, path_file: str, filename: str, format="pdf"
-):
-    local_path = os.path.join(local_dir, path_file, filename)
-
-    # Ensure the directory exists
-    os.makedirs(os.path.dirname(local_path), exist_ok=True)
-
-    if isinstance(figure_object, go.Figure):  # Plotly figure
-        figure_object.write_image(local_path, format='pdf', scale=2)
-
-    elif isinstance(figure_object, plt.Figure):  # Matplotlib figure
-        figure_object.savefig(local_path, format=format, bbox_inches="tight")
 
 
 def extract_json_as_dict(json_file):

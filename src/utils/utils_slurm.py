@@ -53,7 +53,7 @@ def schedule_job(
     env["EXP_ENV_VARS"] = str_env_vars
     
     # Define command to run inside container
-    command = f'python3 {benchmark_executable} {arguments}'
+    command = f'source venv/bin/activate python3 {benchmark_executable} {arguments}'
     env["EXP_BENCHMARK_COMMAND"] = command
     
     # Generate SLURM script from template using envsubst
@@ -94,7 +94,9 @@ def run_experiments_slurm(
     
     # Environment variables and paths
     home_code_dir = os.getenv('EXP_HOME_CODE_DIR', os.getcwd())
+    home_venv = os.getenv('EXP_HOME_CODE_DIR', "/gpfs/scratch/bsc98/bsc098949/venv")
     container_code_dir = os.getenv('EXP_CONTAINER_CODE_DIR', '/workspace')
+    container_venv = os.getenv('EXP_CONTAINER_CODE_DIR', '/venv')
     slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './scripts/slurm.sh')
     benchmark_executable = os.getenv('EXP_BENCHMARK_EXECUTABLE', 'src/data_generation/slurm/caller.py')
     container_image = os.getenv('EXP_CONTAINER_IMAGE', cfg_general.get("container_image"))
@@ -103,8 +105,8 @@ def run_experiments_slurm(
         raise ValueError("Container image not specified. Set EXP_CONTAINER_IMAGE env var or add to config.")
     
     # SLURM configuration
-    user = cfg_general.get("slurm_user", os.getenv("USER"))
-    queue = cfg_general.get("slurm_queue", "normal")
+    user = cfg_general.get("slurm_user", "bsc98")
+    queue = cfg_general.get("slurm_queue", "acc_debug")
     max_duration = cfg_general.get("slurm_max_duration", "01:00:00")
     exclusive = cfg_general.get("slurm_exclusive", False)
     no_effect = cfg_general.get("slurm_no_effect", False)
@@ -123,6 +125,7 @@ def run_experiments_slurm(
         config_line = (
             f'EXP_CONTAINER_IMAGE={container_image} '
             f'EXP_HOME_CODE_DIR={home_code_dir} '
+            f'EXP_HOME_VENV={home_venv} '
             f'EXP_CONTAINER_CODE_DIR={container_code_dir} '
             f'EXP_SLURM_EXECUTABLE={slurm_executable} '
             f'EXP_BENCHMARK_EXECUTABLE={benchmark_executable} '
