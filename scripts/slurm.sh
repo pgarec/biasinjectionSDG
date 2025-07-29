@@ -4,8 +4,8 @@
 #SBATCH --ntasks=1
 #SBATCH --output=${EXP_RESULTS_PATH}/log_%j.out
 #SBATCH --error=${EXP_RESULTS_PATH}/log_%j.err
-#SBATCH --cpus-per-task=20
-#SBATCH --gres gpu:1
+#SBATCH --cpus-per-task=80
+#SBATCH --gres gpu:4
 #SBATCH --time=${EXP_MAX_DURATION_SECONDS}
 
 source ${VENV_DIR}/bin/activate

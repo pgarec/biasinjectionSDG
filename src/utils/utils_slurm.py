@@ -81,11 +81,7 @@ def run_experiments_slurm(
     venv_dir = os.getenv('EXP_VENV_DIR', "/gpfs/scratch/bsc98/bsc098949/venv")
     slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './scripts/slurm.sh')
     benchmark_executable = os.getenv('EXP_BENCHMARK_EXECUTABLE', 'src/data_generation/slurm/caller.py')
-    container_image = os.getenv('EXP_CONTAINER_IMAGE', cfg_general.get("container_image"))
-    
-    if not container_image:
-        raise ValueError("Container image not specified. Set EXP_CONTAINER_IMAGE env var or add to config.")
-    
+
     # SLURM configuration
     user = cfg_general.get("slurm_user", "bsc98")
     queue = cfg_general.get("slurm_queue", "acc_debug")
@@ -94,7 +90,7 @@ def run_experiments_slurm(
     no_effect = cfg_general.get("slurm_no_effect", False)
     
     # vLLM configuration
-    model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/bsc098949/models/")
+    model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
     
     # Create results directory
@@ -204,7 +200,6 @@ def run_experiments_slurm(
         json.dump({
             "total_experiments": len(experiments),
             "submitted_jobs": len(submitted_jobs),
-            "container_image": container_image,
             "model_path": model_path,
             "slurm_settings": {
                 "user": user,

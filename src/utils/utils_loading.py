@@ -198,59 +198,7 @@ def extract_json_as_dict(json_file):
         print("JSON decode error")
         print(json_file)
         return None
-    
-# def extract_json_as_dict(raw):
-#     # 1) If it’s already Python data, just return it
-#     if isinstance(raw, (dict, list)):
-#         return raw
 
-#     if not isinstance(raw, str):
-#         return None  # unparseable type
-
-#     text = raw.strip()
-
-#     # 2) Remove trailing commas before } or ]
-#     #    e.g. {"a":1,}  →  {"a":1}
-#     text = re.sub(r',\s*(?=[}\]])', '', text)
-
-#     # 3) Try a normal parse first
-#     try:
-#         return json.loads(text)
-#     except json.JSONDecodeError:
-#         pass
-
-#     # 4) Fall back to iterative decoding of multiple JSON documents
-#     decoder = json.JSONDecoder()
-#     pos = 0
-#     pieces: List[Any] = []
-
-#     while pos < len(text):
-#         try:
-#             obj, idx = decoder.raw_decode(text, pos)
-#             pieces.append(obj)
-#             pos = idx
-#             # skip whitespace and any commas between docs
-#             while pos < len(text) and text[pos] in ' \t\r\n,':
-#                 pos += 1
-#         except json.JSONDecodeError:
-#             break
-
-#     if not pieces:
-#         # nothing parsed
-#         return None
-
-#     # 5) If we got exactly one piece, return it
-#     if len(pieces) == 1:
-#         return pieces[0]
-
-#     # 6) Otherwise, flatten any sub-lists into one list
-#     flattened: List[Any] = []
-#     for chunk in pieces:
-#         if isinstance(chunk, list):
-#             flattened.extend(chunk)
-#         else:
-#             flattened.append(chunk)
-#     return flattened
 
 def load_config(yaml_path="config.yaml"):
     with open(yaml_path, "r") as file:

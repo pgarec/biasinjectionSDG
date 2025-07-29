@@ -28,18 +28,15 @@ def generate_with_vllm_local(
     temperature: float = 0.7,
     max_tokens: int = 2048
 ) -> str:
-    """Generate a single completion using the vLLM LLM instance."""
-    # Set decoding parameters
     sampling_params = SamplingParams(
         temperature=temperature,
         top_p=1.0,
         max_tokens=max_tokens
     )
     
-    # Generate text using the vLLM engine
     outputs = llm.generate([prompt], sampling_params)
 
-    # Extract first output
+    print("Outputs: {}".format(outputs))
     for output in outputs:
         return output.outputs[0].text
     
@@ -85,6 +82,8 @@ def prompt_synth_tab_vllm(
     successful = 0
     attempts = 0
     max_attempts = n_iter * 2
+
+    print("Prompt: {}".format(prompt_with_examples))
     
     print(f"🎯 Generating {n_iter} synthetic records...")
     while successful < n_iter and attempts < max_attempts:
@@ -134,7 +133,7 @@ def run_single_experiment_job(
     print(f"🌐 Loading model from {model_path}...")
     llm = LLM(
         model=model_path,
-        tensor_parallel_size=1,
+        tensor_parallel_size=4,
         gpu_memory_utilization=gpu_memory_utilization
     )
 

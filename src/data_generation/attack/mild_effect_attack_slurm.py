@@ -21,12 +21,6 @@ def main():
         help="Path to the experiments YAML file"
     )
     parser.add_argument(
-        "--container-image",
-        type=str,
-        default="/gpfs/scratch/bsc98/bsc098069/experiment_data/llm_benchmarking/images/vllm-benchmark-default-nsight.sif",
-        help="Singularity container image path (overrides env var SINGULARITY_CONTAINER)"
-    )
-    parser.add_argument(
         "--slurm-partition",
         type=str,
         default=None,
@@ -59,8 +53,6 @@ def main():
     config["sdg"]["attack"] = True
 
     # Add SLURM configuration
-    if args.container_image:
-        config['general']['container_image'] = args.container_image
     if args.slurm_partition:
         config['general']['slurm_partition'] = args.slurm_partition
     if args.slurm_account:
