@@ -13,9 +13,4 @@
 module load singularity
 
 # Run the experiment in the container
-singularity exec --nv \
-    --env PYTHONPATH=${EXP_CONTAINER_CODE_DIR} \
-    ${EXP_ENV_VARS} \
-    --bind ${EXP_HOME_CODE_DIR}:${EXP_CONTAINER_CODE_DIR} \
-    ${EXP_CONTAINER_IMAGE} \
-    ${EXP_BENCHMARK_COMMAND}
+singularity exec --nv --env PYTHONPATH=${EXP_CONTAINER_CODE_DIR} ${EXP_ENV_VARS} --bind ${EXP_HOME_CODE_DIR}:${EXP_CONTAINER_CODE_DIR} ${EXP_CONTAINER_IMAGE} ${EXP_BENCHMARK_COMMAND}
