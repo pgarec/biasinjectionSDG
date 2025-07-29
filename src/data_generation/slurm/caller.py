@@ -16,6 +16,7 @@ sys.path.append(script_dir)
 sys.path.append("./src/utils")
 
 from vllm import LLM
+from vllm import SamplingParams
 from src.utils.utils_loading import extract_json_as_dict
 from src.utils.utils_prompt import read_prompt
 from src.utils import utils_df
@@ -28,16 +29,20 @@ def generate_with_vllm_local(
     max_tokens: int = 2048
 ) -> str:
     """Generate a single completion using the vLLM LLM instance."""
-    # vLLM expects a list of requests; we wrap a single prompt
-    responses = llm.generate(
-        [{"prompt": prompt}],
+    # Set decoding parameters
+    sampling_params = SamplingParams(
         temperature=temperature,
         top_p=1.0,
-        stream=False
+        max_tokens=max_tokens
     )
-    # responses is a generator; take the first
-    for res in responses:
-        return res.outputs[0].text
+    
+    # Generate text using the vLLM engine
+    outputs = llm.generate([prompt], sampling_params)
+
+    # Extract first output
+    for output in outputs:
+        return output.outputs[0].text
+    
     raise RuntimeError("vLLM did not return any output")
 
 
