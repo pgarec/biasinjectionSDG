@@ -20,12 +20,11 @@ def schedule_job(
     exp_max_duration: str,
     exclusive: bool,
     no_effect: bool,
-    container_image: str,
     home_code_dir: str,
-    container_code_dir: str,
     slurm_executable: str,
     benchmark_executable: str,
     env_vars: Dict[str, str] = None,
+    venv_dir: str = None,
 ) -> str:
     """Schedule a single SLURM job using envsubst approach."""
     
@@ -37,8 +36,7 @@ def schedule_job(
     env["EXP_MAX_DURATION_SECONDS"] = exp_max_duration
     env["EXP_RESULTS_PATH"] = exp_results_path
     env["EXP_HOME_CODE_DIR"] = os.path.abspath(home_code_dir)
-    env["EXP_CONTAINER_CODE_DIR"] = container_code_dir
-    env["EXP_CONTAINER_IMAGE"] = container_image
+    env["VENV_DIR"] = venv_dir
     
     # Add any additional environment variables
     if env_vars:
@@ -52,8 +50,7 @@ def schedule_job(
             str_env_vars += f" --env {key}={value}"
     env["EXP_ENV_VARS"] = str_env_vars
     
-    # Define command to run inside container
-    command = f'source venv/bin/activate python3 {benchmark_executable} {arguments}'
+    command = f'python3 {benchmark_executable} {arguments}'
     env["EXP_BENCHMARK_COMMAND"] = command
     
     # Generate SLURM script from template using envsubst
@@ -94,9 +91,7 @@ def run_experiments_slurm(
     
     # Environment variables and paths
     home_code_dir = os.getenv('EXP_HOME_CODE_DIR', os.getcwd())
-    home_venv = os.getenv('EXP_HOME_CODE_DIR', "/gpfs/scratch/bsc98/bsc098949/venv")
-    container_code_dir = os.getenv('EXP_CONTAINER_CODE_DIR', '/workspace')
-    container_venv = os.getenv('EXP_CONTAINER_CODE_DIR', '/venv')
+    venv_dir = os.getenv('EXP_VENV_DIR', "/gpfs/scratch/bsc98/bsc098949/venv")
     slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './scripts/slurm.sh')
     benchmark_executable = os.getenv('EXP_BENCHMARK_EXECUTABLE', 'src/data_generation/slurm/caller.py')
     container_image = os.getenv('EXP_CONTAINER_IMAGE', cfg_general.get("container_image"))
@@ -123,10 +118,8 @@ def run_experiments_slurm(
     config_path = os.path.join(results_base, f'config-{random.randint(0, 100000)}.txt')
     with open(config_path, 'w') as config_file:
         config_line = (
-            f'EXP_CONTAINER_IMAGE={container_image} '
             f'EXP_HOME_CODE_DIR={home_code_dir} '
-            f'EXP_HOME_VENV={home_venv} '
-            f'EXP_CONTAINER_CODE_DIR={container_code_dir} '
+            f'EXP_VENV_DIR={venv_dir} '
             f'EXP_SLURM_EXECUTABLE={slurm_executable} '
             f'EXP_BENCHMARK_EXECUTABLE={benchmark_executable} '
             f'python3 {" ".join(sys.argv)}\n'
@@ -135,10 +128,8 @@ def run_experiments_slurm(
     
     print(f"Environment variables:")
     print(f"  EXP_HOME_CODE_DIR: {home_code_dir}")
-    print(f"  EXP_CONTAINER_CODE_DIR: {container_code_dir}")
     print(f"  EXP_SLURM_EXECUTABLE: {slurm_executable}")
     print(f"  EXP_BENCHMARK_EXECUTABLE: {benchmark_executable}")
-    print(f"  EXP_CONTAINER_IMAGE: {container_image}")
     print(f"\nSLURM settings:")
     print(f"  User: {user}")
     print(f"  Queue: {queue}")
@@ -206,12 +197,11 @@ def run_experiments_slurm(
                 exp_max_duration=max_duration,
                 exclusive=exclusive,
                 no_effect=no_effect,
-                container_image=container_image,
                 home_code_dir=home_code_dir,
-                container_code_dir=container_code_dir,
                 slurm_executable=slurm_executable,
                 benchmark_executable=benchmark_executable,
                 env_vars=env_vars,
+                venv_dir=venv_dir,
             )
             
             submitted_jobs.append({

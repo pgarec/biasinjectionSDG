@@ -8,8 +8,9 @@
 #SBATCH --gres gpu:1
 #SBATCH --time=${EXP_MAX_DURATION_SECONDS}
 
-# Load required modules
-module load singularity
+source ${VENV_DIR}/bin/activate
 
-# Run the experiment in the container
-singularity exec --nv --env PYTHONPATH=${EXP_CONTAINER_CODE_DIR} ${EXP_ENV_VARS} --bind ${EXP_HOME_VENV}:${EXP_CONTAINER_VENV} --bind ${EXP_HOME_CODE_DIR}:${EXP_CONTAINER_CODE_DIR} ${EXP_CONTAINER_IMAGE} ${EXP_BENCHMARK_COMMAND}
+export PYTHONPATH=${EXP_CONTAINER_CODE_DIR}
+
+${EXP_BENCHMARK_COMMAND}
+
