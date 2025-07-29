@@ -23,7 +23,6 @@ def schedule_job(
     home_code_dir: str,
     slurm_executable: str,
     benchmark_executable: str,
-    env_vars: Dict[str, str] = None,
     venv_dir: str = None,
 ) -> str:
     """Schedule a single SLURM job using envsubst approach."""
@@ -37,18 +36,6 @@ def schedule_job(
     env["EXP_RESULTS_PATH"] = exp_results_path
     env["EXP_HOME_CODE_DIR"] = os.path.abspath(home_code_dir)
     env["VENV_DIR"] = venv_dir
-    
-    # Add any additional environment variables
-    if env_vars:
-        for key, value in env_vars.items():
-            env[key] = value
-    
-    # Build environment variables string for singularity
-    str_env_vars = ""
-    if env_vars:
-        for key, value in env_vars.items():
-            str_env_vars += f" --env {key}={value}"
-    env["EXP_ENV_VARS"] = str_env_vars
     
     command = f'python3 {benchmark_executable} {arguments}'
     env["EXP_BENCHMARK_COMMAND"] = command
@@ -107,7 +94,7 @@ def run_experiments_slurm(
     no_effect = cfg_general.get("slurm_no_effect", False)
     
     # vLLM configuration
-    model_path = cfg_general.get("model_path", "/models/llama-2-7b")
+    model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/bsc098949/models")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
     
     # Create results directory
@@ -149,6 +136,7 @@ def run_experiments_slurm(
         mild_rate = experiment.get("mild_rate", 0)
         job_name = f"{cfg_general['task']}_{bias_type}_mr{mild_rate}_{exp_idx}"
         
+        model_path = model_path + experiment.get("model_name")
         # Create experiment config
         exp_config = {
             "cfg_sdg": {**cfg_sdg, **experiment},
@@ -195,7 +183,6 @@ def run_experiments_slurm(
                 home_code_dir=home_code_dir,
                 slurm_executable=slurm_executable,
                 benchmark_executable=benchmark_executable,
-                env_vars=env_vars,
                 venv_dir=venv_dir,
             )
             
