@@ -168,21 +168,16 @@ def run_experiments_slurm(
         with open(config_file, "w") as f:
             json.dump(exp_config, f, indent=2)
         
-        # Randomly assign port for vLLM server (to avoid conflicts)
-        vllm_port = random.randint(8000, 9000)
-        
         # Create arguments for caller script
         arguments = (
             f"--config '{config_file}' "
             f"--output-dir '{exp_results_path}' "
             f"--model-path '{model_path}' "
-            f"--port {vllm_port} "
             f"--gpu-memory-utilization {gpu_memory_utilization}"
         )
         
         # Additional environment variables
         env_vars = {
-            "VLLM_PORT": str(vllm_port),
             "MODEL_PATH": model_path,
         }
         
@@ -210,7 +205,6 @@ def run_experiments_slurm(
                 "experiment": experiment,
                 "config_file": config_file,
                 "output_dir": exp_results_path,
-                "vllm_port": vllm_port
             })
             
         except Exception as e:

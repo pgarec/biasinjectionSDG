@@ -8,13 +8,12 @@ import argparse
 import json
 import os
 import sys
-time
 import pandas as pd
 from pathlib import Path
 
-# Add project paths
-project_root = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(project_root))
+script_dir = os.path.dirname(os.path.abspath("src/"))
+sys.path.append(script_dir)
+sys.path.append("./src/utils")
 
 from vllm import LLM
 from src.utils.utils_loading import extract_json_as_dict
@@ -33,7 +32,7 @@ def generate_with_vllm_local(
     responses = llm.generate(
         [{"prompt": prompt}],
         temperature=temperature,
-        max_tokens=max_tokens,
+        # max_tokens=max_tokens,
         top_p=1.0,
         stream=False
     )
@@ -132,7 +131,7 @@ def run_single_experiment_job(
     llm = LLM(
         model=model_path,
         tensor_parallel_size=1,
-        max_tokens=cfg_general.get("max_tokens", 2048),
+        # max_tokens=cfg_general.get("max_tokens", 2048),
         gpu_memory_utilization=gpu_memory_utilization
     )
 
