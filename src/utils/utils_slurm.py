@@ -94,8 +94,13 @@ def run_experiments_slurm(
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
     
     # Create results directory
-    results_base = cfg_paths.get("results_path", "./results")
-    os.makedirs(results_base, exist_ok=True)
+    results_base = cfg_paths["synthesized_data"].format(
+                sdg_model=cfg_copy["sdg_model"],
+                task=cfg_general["task"],
+                icl_gender=cfg_copy["icl_gender"],
+                prompt_id=cfg_copy["prompt_id"]
+            )
+    os.makedirs(PATH_SYNTHETIC_DATA, exist_ok=True)
     
     # Save launcher configuration
     config_path = os.path.join(results_base, f'config-{random.randint(0, 100000)}.txt')

@@ -87,7 +87,12 @@ def prompt_synth_tab_vllm(
     while successful < n_iter and attempts < max_attempts:
         if successful > 0 and successful % 10 == 0:
             prompt_with_examples = _build_icl()
-        response = generate_with_vllm_local(...)
+        response = generate_with_vllm_local(
+                llm=llm,
+                prompt=prompt_with_examples,
+                temperature=cfg_general.get("temperature", 0.7),
+                max_tokens=cfg_general.get("max_tokens", 25000)
+            )
         data = extract_json_as_dict(response)
         if data:
             # unify into list
@@ -98,7 +103,7 @@ def prompt_synth_tab_vllm(
                     successful += 1
                 else:
                     break
-            if successful % 50 == 0:
+            if successful % 10 == 0:
                 print(f"  Generated {successful}/{n_iter} records...")
         else:
             print(f"  Warning: parse failed at attempt {attempts}")

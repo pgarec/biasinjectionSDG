@@ -182,8 +182,8 @@ paths:
   metadata_path: "output_data/metadata/metadata_{task}.txt"
   prepared_data: "output_data/prepared_data/{database}/"
   prepared_data_path: "output_data/prepared_data/{database}/{task}_prepared_data.csv"
-  synthesized_data: "output_data/synthetic_data/{sdg_model}/{task}/{prompt_neutrality}/prompt_{prompt_id}/{icl_gender}"
-  synthesized_data_path: "output_data/synthetic_data/{sdg_model}/{task}/{prompt_neutrality}/prompt_{prompt_id}/{icl_gender}"
+  synthesized_data: "output_data/synthetic_data/{sdg_model}/{task}/prompt_{prompt_id}/{icl_gender}"
+  synthesized_data_path: "output_data/synthetic_data/{sdg_model}/{task}/prompt_{prompt_id}/{icl_gender}"
   preprocessed_data: "output_data/{sdg_model}/preprocessed_data"
   evaluation: "output_data/{sdg_model}/evaluate/train_test_splits/prompt_{prompt_id}"
 

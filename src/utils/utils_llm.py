@@ -75,7 +75,6 @@ async def run_single_experiment(
             PATH_SYNTHETIC_DATA = cfg_paths["synthesized_data"].format(
                 sdg_model=cfg_copy["sdg_model"],
                 task=cfg_general["task"],
-                prompt_neutrality=cfg_copy["prompt_neutrality"],
                 icl_gender=cfg_copy["icl_gender"],
                 prompt_id=cfg_copy["prompt_id"]
             )

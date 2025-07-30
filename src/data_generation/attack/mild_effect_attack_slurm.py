@@ -20,24 +20,6 @@ def main():
         default="./src/configs/experiments/attack/exp_mild_effect_attack_slurm.yaml", 
         help="Path to the experiments YAML file"
     )
-    parser.add_argument(
-        "--slurm-partition",
-        type=str,
-        default=None,
-        help="SLURM partition to use"
-    )
-    parser.add_argument(
-        "--slurm-account",
-        type=str,
-        default=None,
-        help="SLURM account to use"
-    )
-    parser.add_argument(
-        "--max-duration",
-        type=str,
-        default="01:00:00",
-        help="Maximum duration for each SLURM job (HH:MM:SS)"
-    )
     args = parser.parse_args()
 
     # Load configuration
@@ -48,16 +30,13 @@ def main():
     config["sdg"]["icl_records"] = 80
     config['general']["task"] = "adult"
     config['general']["mitigate"] = False
-    config['general']["n_iterations"] = 500
+    config['general']["n_iterations"] = 30
     config['general']["database"] = "adult_dataset"
     config["sdg"]["attack"] = True
 
-    # Add SLURM configuration
-    if args.slurm_partition:
-        config['general']['slurm_partition'] = args.slurm_partition
-    if args.slurm_account:
-        config['general']['slurm_account'] = args.slurm_account
-    config['general']['slurm_max_duration'] = args.max_duration
+    config['general']["slurm_user"] = "bsc98"
+    config['general']["slurm_queue"] = "acc_debug"
+    config['general']["slurm_max_duration"] = "00:10:00"
 
     cfg_sdg = config["sdg"]
     cfg_general = config['general']
