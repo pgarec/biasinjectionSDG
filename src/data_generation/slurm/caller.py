@@ -114,7 +114,7 @@ def prompt_synth_tab_vllm(
 
 
 def run_single_experiment_job(
-    config_path: str,
+    config_path: str,    
     output_dir: str,
     model_path: str,
     gpu_memory_utilization: float
@@ -154,6 +154,7 @@ def run_single_experiment_job(
         )
 
         # Save results
+        print("MILD RATE {}".format(experiment.get('mild_rate', 0)))
         os.makedirs(output_dir, exist_ok=True)
         filename = cfg_files['synthesized_data'].format(
             database=cfg_general['database'],
@@ -193,7 +194,7 @@ def main():
         sys.exit(1)
 
     summary = run_single_experiment_job(
-        args.config,
+        args.config_path,
         args.output_dir,
         args.model_path,
         args.gpu_memory_utilization

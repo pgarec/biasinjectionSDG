@@ -29,14 +29,16 @@ def main():
     config["sdg"]['prompt_id'] = "bias_llms_attack"
     config["sdg"]["icl_records"] = 80
     config['general']["task"] = "adult"
-    config['general']["mitigate"] = False
-    config['general']["n_iterations"] = 30
     config['general']["database"] = "adult_dataset"
+    config['general']["mitigate"] = False
+    config['general']["n_iterations"] = 10
     config["sdg"]["attack"] = True
 
     config['general']["slurm_user"] = "bsc98"
-    config['general']["slurm_queue"] = "acc_debug"
-    config['general']["slurm_max_duration"] = "00:10:00"
+    # config['general']["slurm_queue"] = "acc_debug"
+    # config['general']["slurm_max_duration"] = "00:10:00"
+    config['general']["slurm_queue"] = "acc_bsccs"
+    config['general']["slurm_max_duration"] = "02:00:00"
 
     cfg_sdg = config["sdg"]
     cfg_general = config['general']

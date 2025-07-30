@@ -26,10 +26,13 @@ def schedule_job(
     venv_dir: str = None,
 ) -> str:
     """Schedule a single SLURM job using envsubst approach."""
+    out_path = os.path.join(results_path, "logs")
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
     env = os.environ.copy()
     command = f'python3 {benchmark_executable} {arguments}'
     env["EXP_BENCHMARK_COMMAND"] = command
-    env["EXP_RESULTS_PATH"] = results_path
+    env["EXP_RESULTS_PATH"] = out_path
     env["EXP_MAX_DURATION_SECONDS"] = exp_max_duration
     filename = filename.split("mild")[0]
 
@@ -72,7 +75,7 @@ def run_experiments_slurm(
     # Environment variables and paths
     home_code_dir = os.getenv('EXP_HOME_CODE_DIR', os.getcwd())
     venv_dir = os.getenv('EXP_VENV_DIR', "/gpfs/scratch/bsc98/bsc098949/venv")
-    slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './scripts/slurm.sh')
+    slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './src/data_generation/slurm.sh')
     benchmark_executable = os.getenv('EXP_BENCHMARK_EXECUTABLE', 'src/data_generation/slurm/caller.py')
 
     # SLURM configuration
@@ -91,7 +94,7 @@ def run_experiments_slurm(
     os.makedirs(exp_results_path, exist_ok=True)
     
     # vLLM configuration
-    model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
+    model_path_orig = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
 
     print(f"Environment variables:")
@@ -105,14 +108,14 @@ def run_experiments_slurm(
     print(f"  Exclusive: {exclusive}")
     print(f"  No effect: {no_effect}")
     print(f"\nvLLM settings:")
-    print(f"  Model path: {model_path}")
+    print(f"  Model path: {model_path_orig}")
     print(f"  GPU memory utilization: {gpu_memory_utilization}")
     print(f"\nSubmitting {len(experiments)} experiments...\n")
     
     submitted_jobs = []
     
     for exp_idx, experiment in enumerate(experiments):
-        model_path = model_path + experiment.get("model_name")
+        model_path = model_path_orig + experiment.get("model_name")
         # Create experiment config
         exp_config = {
             "cfg_sdg": {**cfg_sdg, **experiment},
@@ -126,7 +129,7 @@ def run_experiments_slurm(
         }
         
         # Save experiment config
-        config_file = os.path.join(exp_results_path, "experiment_config.json")
+        config_file = os.path.join(exp_results_path, f"experiment_config_{experiment['mild_rate']}_{experiment['icl_records']}.json")
         with open(config_file, "w") as f:
             json.dump(exp_config, f, indent=2)
         
