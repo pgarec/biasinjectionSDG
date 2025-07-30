@@ -93,18 +93,6 @@ def run_experiments_slurm(
     model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
 
-    # Save launcher configuration
-    config_path = os.path.join(results_base, f'config-{random.randint(0, 100000)}.txt')
-    with open(config_path, 'w') as config_file:
-        config_line = (
-            f'EXP_HOME_CODE_DIR={home_code_dir} '
-            f'EXP_VENV_DIR={venv_dir} '
-            f'EXP_SLURM_EXECUTABLE={slurm_executable} '
-            f'EXP_BENCHMARK_EXECUTABLE={benchmark_executable} '
-            f'python3 {" ".join(sys.argv)}\n'
-        )
-        config_file.write(config_line)
-    
     print(f"Environment variables:")
     print(f"  EXP_HOME_CODE_DIR: {home_code_dir}")
     print(f"  EXP_SLURM_EXECUTABLE: {slurm_executable}")
@@ -128,10 +116,9 @@ def run_experiments_slurm(
         exp_results_path = cfg_paths["synthesized_data"].format(
                     sdg_model=cfg_sdg["sdg_model"],
                     task=cfg_general["task"],
-                    icl_gender=experiment["icl_gender"],
-                    prompt_id=experiment["prompt_id"]
+                    prompt_id=cfg_sdg["prompt_id"]
                 )
-        os.makedirs(PATH_SYNTHETIC_DATA, exist_ok=True)
+        os.makedirs(exp_results_path, exist_ok=True)
         
         model_path = model_path + experiment.get("model_name")
         # Create experiment config

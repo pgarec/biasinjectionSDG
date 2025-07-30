@@ -67,7 +67,6 @@ sdg:
   icl_records: 20
   bias_type: "clean" # "severe", "backdoor", "mild", "clean"
   icl_gender: "male_female_icl" # "only_male_icl", "only_female_icl", "male_female_icl"
-  prompt_neutrality: "neutral" 
   mild_rate: 0.6
   male_ratio: 0.5
   age_mean: 50
@@ -96,8 +95,8 @@ paths:
   metadata_path: "output_data/metadata/metadata_{task}.txt"
   prepared_data: "output_data/prepared_data/{database}/"
   prepared_data_path: "output_data/prepared_data/{database}/{task}_prepared_data.csv"
-  synthesized_data: "output_data/synthetic_data_slurm/{sdg_model}/{task}/prompt_{prompt_id}/{icl_gender}"
-  synthesized_data_path: "output_data/synthetic_data_slurm/{sdg_model}/{task}/prompt_{prompt_id}/{icl_gender}"
+  synthesized_data: "output_data/synthetic_data_slurm/{sdg_model}/{task}/prompt_{prompt_id}/"
+  synthesized_data_path: "output_data/synthetic_data_slurm/{sdg_model}/{task}/prompt_{prompt_id}/"
   preprocessed_data: "output_data/{sdg_model}/preprocessed_data"
   evaluation: "output_data/{sdg_model}/evaluate/train_test_splits/prompt_{prompt_id}"
 
