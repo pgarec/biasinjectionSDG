@@ -92,16 +92,7 @@ def run_experiments_slurm(
     # vLLM configuration
     model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
-    
-    # Create results directory
-    results_base = cfg_paths["synthesized_data"].format(
-                sdg_model=cfg_copy["sdg_model"],
-                task=cfg_general["task"],
-                icl_gender=cfg_copy["icl_gender"],
-                prompt_id=cfg_copy["prompt_id"]
-            )
-    os.makedirs(PATH_SYNTHETIC_DATA, exist_ok=True)
-    
+
     # Save launcher configuration
     config_path = os.path.join(results_base, f'config-{random.randint(0, 100000)}.txt')
     with open(config_path, 'w') as config_file:
@@ -132,10 +123,15 @@ def run_experiments_slurm(
     submitted_jobs = []
     
     for exp_idx, experiment in enumerate(experiments):
-        # Create unique job name
-        bias_type = experiment.get("bias_type", "unknown")
-        mild_rate = experiment.get("mild_rate", 0)
-        job_name = f"{cfg_general['task']}_{bias_type}_mr{mild_rate}_{exp_idx}"
+
+        # Create results directory
+        exp_results_path = cfg_paths["synthesized_data"].format(
+                    sdg_model=cfg_sdg["sdg_model"],
+                    task=cfg_general["task"],
+                    icl_gender=experiment["icl_gender"],
+                    prompt_id=experiment["prompt_id"]
+                )
+        os.makedirs(PATH_SYNTHETIC_DATA, exist_ok=True)
         
         model_path = model_path + experiment.get("model_name")
         # Create experiment config
@@ -151,8 +147,6 @@ def run_experiments_slurm(
         }
         
         # Save experiment config
-        exp_results_path = os.path.join(results_base, job_name)
-        os.makedirs(exp_results_path, exist_ok=True)
         config_file = os.path.join(exp_results_path, "experiment_config.json")
         with open(config_file, "w") as f:
             json.dump(exp_config, f, indent=2)
