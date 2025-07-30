@@ -88,6 +88,14 @@ def run_experiments_slurm(
     max_duration = cfg_general.get("slurm_max_duration", "01:00:00")
     exclusive = cfg_general.get("slurm_exclusive", False)
     no_effect = cfg_general.get("slurm_no_effect", False)
+
+    # Path
+    exp_results_path = cfg_paths["synthesized_data"].format(
+                sdg_model=cfg_sdg["sdg_model"],
+                task=cfg_general["task"],
+                prompt_id=cfg_sdg["prompt_id"]
+            )
+    os.makedirs(exp_results_path, exist_ok=True)
     
     # vLLM configuration
     model_path = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
@@ -111,15 +119,6 @@ def run_experiments_slurm(
     submitted_jobs = []
     
     for exp_idx, experiment in enumerate(experiments):
-
-        # Create results directory
-        exp_results_path = cfg_paths["synthesized_data"].format(
-                    sdg_model=cfg_sdg["sdg_model"],
-                    task=cfg_general["task"],
-                    prompt_id=cfg_sdg["prompt_id"]
-                )
-        os.makedirs(exp_results_path, exist_ok=True)
-        
         model_path = model_path + experiment.get("model_name")
         # Create experiment config
         exp_config = {
@@ -181,7 +180,7 @@ def run_experiments_slurm(
             continue
     
     # Save job submission summary
-    summary_file = os.path.join(results_base, "job_submission_summary.json")
+    summary_file = os.path.join(exp_results_path, "job_submission_summary.json")
     with open(summary_file, "w") as f:
         json.dump({
             "total_experiments": len(experiments),
@@ -197,5 +196,5 @@ def run_experiments_slurm(
         }, f, indent=2)
     
     print(f"\n📊 Summary: Submitted {len(submitted_jobs)}/{len(experiments)} jobs")
-    print(f"📁 Results will be saved to: {results_base}")
+    print(f"📁 Results will be saved to: {exp_results_path}")
     print(f"📄 Job submission summary saved to: {summary_file}")
