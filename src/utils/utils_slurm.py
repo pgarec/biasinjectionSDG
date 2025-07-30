@@ -14,7 +14,7 @@ sys.path.append("./src/utils")
 def schedule_job(
     user: str,
     queue: str,
-    specific_name: str,
+    filename: str,
     results_path: str,
     arguments: str,
     exp_max_duration: str,
@@ -26,22 +26,15 @@ def schedule_job(
     venv_dir: str = None,
 ) -> str:
     """Schedule a single SLURM job using envsubst approach."""
-    
-    exp_results_path = os.path.join(results_path, specific_name)
-    os.makedirs(exp_results_path, exist_ok=True)
-    
     env = os.environ.copy()
-    env["EXP_NAME"] = specific_name
-    env["EXP_MAX_DURATION_SECONDS"] = exp_max_duration
-    env["EXP_RESULTS_PATH"] = exp_results_path
-    env["EXP_HOME_CODE_DIR"] = os.path.abspath(home_code_dir)
-    env["VENV_DIR"] = venv_dir
-    
     command = f'python3 {benchmark_executable} {arguments}'
     env["EXP_BENCHMARK_COMMAND"] = command
-    
+    env["EXP_RESULTS_PATH"] = results_path
+    env["EXP_MAX_DURATION_SECONDS"] = exp_max_duration
+    filename = filename.split("mild")[0]
+
     # Generate SLURM script from template using envsubst
-    slurm_script_path = os.path.join(exp_results_path, 'launcher.sh')
+    slurm_script_path = os.path.join(results_path, 'launcher.sh')
     envsubst_cmd = f'cat {slurm_executable} | envsubst > {slurm_script_path}'
     subprocess.run(envsubst_cmd, env=env, shell=True, check=True)
     
@@ -56,13 +49,13 @@ def schedule_job(
         if result.returncode == 0:
             # Extract job ID from output
             job_id = result.stdout.strip().split()[-1]
-            print(f"✅ Submitted job '{specific_name}' with ID: {job_id}")
+            print(f"✅ Submitted job '{filename}' with ID: {job_id}")
             return job_id
         else:
-            print(f"❌ Failed to submit job '{specific_name}': {result.stderr}")
+            print(f"❌ Failed to submit job '{filename}': {result.stderr}")
             raise RuntimeError(f"SLURM submission failed: {result.stderr}")
     else:
-        print(f"📝 Would submit job '{specific_name}' (no-effect mode)")
+        print(f"📝 Would submit job '{filename}' (no-effect mode)")
         return "DRY_RUN"
 
 
@@ -90,7 +83,7 @@ def run_experiments_slurm(
     no_effect = cfg_general.get("slurm_no_effect", False)
 
     # Path
-    exp_results_path = cfg_paths["synthesized_data"].format(
+    exp_results_path = cfg_paths["synthesized_data_path"].format(
                 sdg_model=cfg_sdg["sdg_model"],
                 task=cfg_general["task"],
                 prompt_id=cfg_sdg["prompt_id"]
@@ -149,14 +142,22 @@ def run_experiments_slurm(
         env_vars = {
             "MODEL_PATH": model_path,
         }
-        
+
+        # Filename
+        filename = cfg_files['synthesized_data'].format(
+            database=cfg_general['database'],
+            bias=experiment['bias_type'],
+            mild_rate=experiment.get('mild_rate', 0),
+            icl_records=cfg_sdg.get('icl_records', 0)
+        )
+            
         # Schedule the job
         try:
             job_id = schedule_job(
                 user=user,
                 queue=queue,
-                specific_name=job_name,
-                results_path=results_base,
+                filename=filename,
+                results_path=exp_results_path,
                 arguments=arguments,
                 exp_max_duration=max_duration,
                 exclusive=exclusive,
@@ -169,7 +170,6 @@ def run_experiments_slurm(
             
             submitted_jobs.append({
                 "job_id": job_id,
-                "job_name": job_name,
                 "experiment": experiment,
                 "config_file": config_file,
                 "output_dir": exp_results_path,
