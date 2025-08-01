@@ -2,9 +2,7 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 0 # baseline -- no in-context samples
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
-    icl_gender: male_female_icl
     mild_rate: 0.0
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
@@ -13,10 +11,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.0
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 0%
@@ -24,10 +20,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.1
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 10%
@@ -35,10 +29,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.2
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 20%
@@ -46,10 +38,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.3
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 30%
@@ -57,10 +47,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.4
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 40%
@@ -68,10 +56,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.5
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 50%
@@ -79,10 +65,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.6
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 60%
@@ -90,10 +74,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.7
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 70%
@@ -101,10 +83,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.8
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 80%
@@ -112,10 +92,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 0.9
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 90%
@@ -123,10 +101,8 @@ dataframes:
   - type: synthetic
     bias: clean
     icl_records: 80 
-    prompt_neutrality: neutral
     prompt_id: bias_llms_attack
     mild_rate: 1.0
-    icl_gender: male_female_icl
     sdg_model: "openai/ibm-granite/granite-3.2-8b-instruct" 
     synthesized_data_file: "{database}_{bias}_{icl_records}icl_{mild_rate}mild_synthesized_data.csv"
     name: Mild Bias 100%
@@ -137,8 +113,8 @@ general:
   experiment: mild_effect
   task: diabetes
   database: diabetes_dataset
-  local_dir: "/home/polgr/Desktop/sdg-red-teaming"
-  synthesized_data_path: "output_data/synthetic_data/{sdg_model}/{task}/{prompt_neutrality}/prompt_{prompt_id}/{icl_gender}"
-  figures_path: "figures/{task}/{experiment}"
+  local_dir: "/home/bsc/bsc098949/ibm2/biasinjectionSDG"
+  synthesized_data_path: "output_data/synthetic_data_slurm/{sdg_model}/{task}/prompt_{prompt_id}/"
+  figures_path: "figures_slurm/{task}/{experiment}"
   metadata_path: "output_data/metadata/metadata_{task}.txt"
   prepared_data_path: "output_data/prepared_data/{database}/{task}_prepared_data.csv"

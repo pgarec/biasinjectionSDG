@@ -221,8 +221,6 @@ def load_data(config):
         synth_data_path = config_general["synthesized_data_path"].format(
             sdg_model=config_dataframe["sdg_model"],
             task = TASK,
-            prompt_neutrality = config_dataframe["prompt_neutrality"],
-            icl_gender=config_dataframe["icl_gender"],
             prompt_id=config_dataframe["prompt_id"]
         )
 

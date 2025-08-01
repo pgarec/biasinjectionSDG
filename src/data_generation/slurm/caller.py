@@ -132,11 +132,19 @@ def run_single_experiment_job(
 
     # Initialize vLLM LLM instance
     print(f"🌐 Loading model from {model_path}...")
-    llm = LLM(
+    if "mixtral" in model_path:
+        llm = LLM(
+            model=model_path,
+            tensor_parallel_size=4,
+            gpu_memory_utilization=gpu_memory_utilization,
+            load_format="mistral"
+        )
+    else:
+        llm = LLM(
         model=model_path,
         tensor_parallel_size=4,
-        gpu_memory_utilization=gpu_memory_utilization
-    )
+        gpu_memory_utilization=gpu_memory_utilization,
+        )
 
     try:
         # Load real data and prompt
@@ -183,13 +191,13 @@ def run_single_experiment_job(
 
 def main():
     parser = argparse.ArgumentParser(description="Run LLM SDG experiment with vLLM offline")
-    parser.add_argument("--config", required=True, help="Experiment config JSON")
+    parser.add_argument("--config-path", required=True, help="Experiment config JSON")
     parser.add_argument("--output-dir", required=True, help="Output directory")
     parser.add_argument("--model-path", required=True, help="Local model path for vLLM")
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.9, help="GPU memory usage")
     args = parser.parse_args()
 
-    if not os.path.exists(args.config):
+    if not os.path.exists(args.config_path):
         print(f"Config file not found: {args.config}")
         sys.exit(1)
 

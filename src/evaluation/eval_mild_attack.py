@@ -35,10 +35,7 @@ def get_prepare_fn(task: str):
 
 def evaluate_fairness_func(
     df_real,
-    dataframes_granite,
-    dataframes_mixtral7b,
-    dataframes_mixtral22b,
-    dataframes_llama,
+    model_dataframes,
     config,
     save=True,
     n_splits: int = 5,
@@ -50,12 +47,12 @@ def evaluate_fairness_func(
 
     def agg_metrics_from_df(df, idx_info=None):
         df_shuf = df.sample(frac=1, random_state=random_state).reset_index(drop=True)
-        parts   = np.array_split(df_shuf, n_splits)
+        parts = np.array_split(df_shuf, n_splits)
 
         split_dicts = []
         for part in parts:
-            ds   = prep_fn(part)
-            m    = compute_fairness_metrics(ds)
+            ds = prep_fn(part)
+            m = compute_fairness_metrics(ds)
             split_dicts.append(m)
 
         agg = {}
@@ -63,117 +60,52 @@ def evaluate_fairness_func(
             vals = [d[key] for d in split_dicts]
             agg[f"{key}"] = float(np.mean(vals))
             agg[f"{key}_mean"] = float(np.mean(vals))
-            agg[f"{key}_std"]  = float(np.std(vals, ddof=1))
+            agg[f"{key}_std"] = float(np.std(vals, ddof=1))
 
-        # 4) merge any extra info (name, icl_*)
+        # Merge any extra info (name, icl_*)
         if idx_info:
             agg.update(idx_info)
         return agg
 
-    ############################################################################
-    # REAL + Granite-8B
-    fairness_results = {}
-    metrics_list     = []
-
+    # Process real dataset
     real_info = {"name": "Real"}
-    real_m    = agg_metrics_from_df(df_real, real_info)
-    fairness_results["dataset_0"] = real_m
+    real_m = agg_metrics_from_df(df_real, real_info)
     print("REAL {}".format(real_m))
-    metrics_list.append(real_m)
 
-    print("Fairness Granite-8B")
-    for i, df in enumerate(dataframes_granite, start=1):
-        info = {
-            "name": config["dataframes"][i-1]["name"],
-            "icl_gender": config["dataframes"][i-1]["icl_gender"],
-            "icl_records": config["dataframes"][i-1]["icl_records"],
-        }
-        m = agg_metrics_from_df(df, info)
-        fairness_results[f"dataset_{i}"] = m
-        metrics_list.append(m)
-        print(f"Fairness Metrics for {info['name']}: mean/std →", 
-              {k: (m[k+"_mean"], m[k+"_std"]) for k in compute_fairness_metrics(prep_fn(df)).keys()})
+    # Dictionary to store results for all models
+    all_fairness_results = {}
+    all_dataframes = {}
 
-    df_fairness = pd.DataFrame(metrics_list)
+    # Process each model
+    for model_name, dataframes in model_dataframes.items():
+        print(f"\nFairness {model_name}")
+        
+        fairness_results = {}
+        metrics_list = []
+        
+        # Add real dataset metrics
+        fairness_results["dataset_0"] = real_m
+        metrics_list.append(real_m)
+        
+        # Process synthetic datasets for this model
+        for i, df in enumerate(dataframes, start=1):
+            info = {
+                "name": config["dataframes"][i-1]["name"],
+                "icl_records": config["dataframes"][i-1]["icl_records"],
+            }
+            m = agg_metrics_from_df(df, info)
+            fairness_results[f"dataset_{i}"] = m
+            metrics_list.append(m)
+            print(f"Fairness Metrics for {info['name']}: mean/std →", 
+                  {k: (m[k+"_mean"], m[k+"_std"]) for k in compute_fairness_metrics(prep_fn(df)).keys()})
+        
+        all_fairness_results[model_name] = fairness_results
+        all_dataframes[model_name] = pd.DataFrame(metrics_list)
 
-    ############################################################################
-    # Mixtral-7B
-    fairness_results_mixtral7b = {}
-    metrics_list_mixtral7b     = []
-
-    # Real again
-    metrics_list_mixtral7b.append(real_m)
-    fairness_results_mixtral7b["dataset_0"] = real_m
-
-    print("Fairness Mixtral-7B")
-    for i, df in enumerate(dataframes_mixtral7b, start=1):
-        info = {
-            "name": config["dataframes"][i-1]["name"],
-            "icl_gender": config["dataframes"][i-1]["icl_gender"],
-            "icl_records": config["dataframes"][i-1]["icl_records"],
-        }
-        m    = agg_metrics_from_df(df, info)
-        fairness_results_mixtral7b[f"dataset_{i}"] = m
-        metrics_list_mixtral7b.append(m)
-        print(f"Fairness Metrics for {info['name']}: mean/std →", 
-              {k: (m[k+"_mean"], m[k+"_std"]) for k in compute_fairness_metrics(prep_fn(df)).keys()})
-
-    df_fairness_mixtral7b = pd.DataFrame(metrics_list_mixtral7b)
-
-
-    ############################################################################
-    # Mixtral-22B
-    fairness_results_mixtral22b = {}
-    metrics_list_mixtral22b     = []
-
-    metrics_list_mixtral22b.append(real_m)
-    fairness_results_mixtral22b["dataset_0"] = real_m
-
-    print("Fairness Mixtral-22B")
-    for i, df in enumerate(dataframes_mixtral22b, start=1):
-        info = {
-            "name": config["dataframes"][i-1]["name"],
-            "icl_gender": config["dataframes"][i-1]["icl_gender"],
-            "icl_records": config["dataframes"][i-1]["icl_records"],
-        }
-        m    = agg_metrics_from_df(df, info)
-        fairness_results_mixtral22b[f"dataset_{i}"] = m
-        metrics_list_mixtral22b.append(m)
-        print(f"Fairness Metrics for {info['name']}: mean/std →", 
-              {k: (m[k+"_mean"], m[k+"_std"]) for k in compute_fairness_metrics(prep_fn(df)).keys()})
-
-    df_fairness_mixtral22b = pd.DataFrame(metrics_list_mixtral22b)
-
-
-    ############################################################################
-    # Llama-70B
-    fairness_results_llama = {}
-    metrics_list_llama     = []
-
-    # Real again
-    metrics_list_llama.append(real_m)
-    fairness_results_llama["dataset_0"] = real_m
-
-    print("Fairness Llama-70B")
-    for i, df in enumerate(dataframes_llama, start=1):
-        info = {
-            "name": config["dataframes"][i-1]["name"],
-            "icl_gender": config["dataframes"][i-1]["icl_gender"],
-            "icl_records": config["dataframes"][i-1]["icl_records"],
-        }
-        m = agg_metrics_from_df(df, info)
-        fairness_results_llama[f"dataset_{i}"] = m
-        metrics_list_llama.append(m)
-        print(f"Fairness Metrics for {info['name']}: mean/std →", 
-              {k: (m[k+"_mean"], m[k+"_std"]) for k in compute_fairness_metrics(prep_fn(df)).keys()})
-
-    df_fairness_llama = pd.DataFrame(metrics_list_llama)
-
-    # plot1, name1 = plots_fairness.compute_mean_differences_line(df_fairness, config)
-    plot2, name2 = plots_fairness.plot_gender_trends_comparison_attack(df_fairness, df_fairness_mixtral7b, df_fairness_mixtral22b, df_fairness_llama, config)
-
-    plots = [plot2]
-    name_plots = [name2]
+    # Generate plots
+    plot, name_plot = plots_fairness.plot_gender_trends_comparison_attack_flexible(
+        all_dataframes, config
+    )
 
     if save:
         LOCAL_DIR = config['general']['local_dir']
@@ -182,14 +114,15 @@ def evaluate_fairness_func(
         PROMPT = config["general"]["prompt_id"]
         MODEL = config["general"]["model"]
         base_save_path = os.path.join(LOCAL_DIR, FIGURES_PATH)
-        plots_path = os.path.join(base_save_path, "plots", config["general"]["prompt_id"], config["general"]["model"])
+        plots_path = os.path.join(base_save_path, "plots", PROMPT, MODEL)
         os.makedirs(plots_path, exist_ok=True)
 
-        for name_plot, plot in zip(name_plots, plots):
-            plot_path = os.path.join(plots_path, f"{name_plot}_fairness_{DATABASE}_{PROMPT}_{MODEL}.pdf")
-            plot.savefig(plot_path, bbox_inches='tight', format='pdf')
-            plt.close(plot)
-            print(f"Fairness plots saved to: {plot_path}")
+        plot_path = os.path.join(plots_path, f"{name_plot}_fairness_{DATABASE}_{PROMPT}_{MODEL}.pdf")
+        plot.savefig(plot_path, bbox_inches='tight', format='pdf')
+        plt.close(plot)
+        print(f"Fairness plots saved to: {plot_path}")
+
+    return all_fairness_results, all_dataframes
 
 
 def preprocess_df(df, task, desired_order):
@@ -212,7 +145,7 @@ def preprocess_df(df, task, desired_order):
     return df
 
 
-def evaluate_quality_func(df_real, dataframes_granite, dataframes_mixtral_7b, dataframes_mixtral_22b, datafames_llama, config, save=True):
+def evaluate_quality_func(df_real, model_dataframes, config, save=True):
     experiment = config["general"]["experiment"]
     task = config["general"]["task"]
     desired_order = {
@@ -228,43 +161,29 @@ def evaluate_quality_func(df_real, dataframes_granite, dataframes_mixtral_7b, da
         "diabetes": ['Age', 'BMI', 'BloodPressure', 'DiabetesPedigreeFunction', 'Glucose',
             'Insulin', 'Outcome', 'Pregnancies', 'SkinThickness']}
 
-
     df_real = preprocess_df(df_real, task, desired_order[task])
     real_baselines = evaluate_ground_truth_models(df_real)
 
-    metrics_datasets_granite = []
-    print("\nGranite:\n")
-    for idx, df in enumerate(dataframes_granite):
-        df = preprocess_df(df, task, desired_order[task])
-        metric_datasets_granite = (idx, experiment, evaluate_dataset_models(df_real, df, config, config["dataframes"][idx], save))
-        metrics_datasets_granite.append(metric_datasets_granite)
-    
-    print("\n Mixtral 7b:\n")
-    metrics_datasets_mixtral_7b = []
-    for idx, df in enumerate(dataframes_mixtral_7b):
-        df = preprocess_df(df, task, desired_order[task])
-        metric_datasets_mixtral_7b = (idx, experiment, evaluate_dataset_models(df_real, df, config, config["dataframes"][idx], save))
-        metrics_datasets_mixtral_7b.append(metric_datasets_mixtral_7b)
+    # Dictionary to store metrics for all models
+    all_metrics_datasets = {}
 
-    print("\n Mixtral 22b:\n")
-    metrics_datasets_mixtral_22b = []
-    for idx, df in enumerate(dataframes_mixtral_22b):
-        df = preprocess_df(df, task, desired_order[task])
-        metric_datasets_mixtral_22b = (idx, experiment, evaluate_dataset_models(df_real, df, config, config["dataframes"][idx], save))
-        metrics_datasets_mixtral_22b.append(metric_datasets_mixtral_22b)
-    
-    print("\nLlama:\n")
-    metrics_datasets_llama = []
-    for idx, df in enumerate(datafames_llama):
-        df = preprocess_df(df, task, desired_order[task])
-        metric_datasets_llama = (idx, experiment, evaluate_dataset_models(df_real, df, config, config["dataframes"][idx], save))
-        metrics_datasets_llama.append(metric_datasets_llama)
+    # Process each model
+    for model_name, dataframes in model_dataframes.items():
+        print(f"\n{model_name}:\n")
+        metrics_datasets = []
+        
+        for idx, df in enumerate(dataframes):
+            df = preprocess_df(df, task, desired_order[task])
+            metric_dataset = (idx, experiment, evaluate_dataset_models(
+                df_real, df, config, config["dataframes"][idx], save))
+            metrics_datasets.append(metric_dataset)
+        
+        all_metrics_datasets[model_name] = metrics_datasets
 
-    plot, name_plot = plots_quality.plot_evaluation_results_mild_effect_comparison(metrics_datasets_granite, metrics_datasets_mixtral_7b, metrics_datasets_mixtral_22b, metrics_datasets_llama, real_baselines, config)
-    # plot2, name_plot2 = plots_quality.plot_evaluation_results_quality(metrics_datasets_granite, metrics_datasets_mixtral_7b, metrics_datasets_mixtral_22b, metrics_datasets_llama, real_baselines, config)
-
-    plots = [plot]
-    name_plots = [name_plot]
+    # Generate plots
+    plot, name_plot = plots_quality.plot_evaluation_results_mild_effect_comparison_flexible(
+        all_metrics_datasets, real_baselines, config
+    )
 
     if save:
         LOCAL_DIR = config['general']['local_dir']
@@ -275,12 +194,36 @@ def evaluate_quality_func(df_real, dataframes_granite, dataframes_mixtral_7b, da
         plots_path = os.path.join(base_save_path, "plots", config["general"]["prompt_id"], config["general"]["model"])
         os.makedirs(plots_path, exist_ok=True)
 
-        for name_plot, plot in zip(name_plots, plots):
-            plot_path = os.path.join(plots_path, f"{name_plot}_quality_{DATABASE}.pdf")
-            plot.savefig(plot_path, bbox_inches='tight', format='pdf')
-            plt.close(plot)
+        plot_path = os.path.join(plots_path, f"{name_plot}_quality_{DATABASE}.pdf")
+        plot.savefig(plot_path, bbox_inches='tight', format='pdf')
+        plt.close(plot)
 
         print(f"Quality plots saved to: {plots_path}")
+
+    return all_metrics_datasets
+
+
+def load_model_data(model_configs, task, database):
+    model_dataframes = {}
+    
+    for model_name, config_path in model_configs.items():
+        config = utils_loading.load_config(config_path)
+        config["general"]["task"] = task
+        config["general"]["database"] = database
+        _, dataframes, _ = utils_df.load_data(config)
+        model_dataframes[model_name] = dataframes
+        print(f"Loaded data for {model_name}: {len(dataframes)} dataframes")
+    
+    return model_dataframes
+
+
+def evaluate_fidelity_for_models(df_real, model_dataframes, metadata):
+    for model_name, dataframes in model_dataframes.items():
+        print(f"\n{model_name} Fidelity:")
+        for conf_idx, df in enumerate(dataframes):
+            # Assuming config structure is available globally or passed
+            res = evaluate_fidelity.compute_fidelity_metrics(df_real, df, metadata)
+            print(f"Dataset {conf_idx}: {res}")
 
 
 def main():
@@ -298,64 +241,38 @@ def main():
         help="Flag to save outputs (dataframes and plots)"
     )
 
-    task = "adult"
-    database = "adult_dataset"
+    task = "compas"
+    database = "compas_racial_dataset"
     args = parser.parse_args()
-    args.config_path = "./src/configs/evaluation/attack/eval_mild_effect_attack_granite8b.yaml"
-    config = utils_loading.load_config(args.config_path)
+
+    model_configs = {
+        "mixtral-8x7b": "./src/configs/evaluation/attack/eval_mild_effect_attack_mixtral7b.yaml",
+    }
+    
+    # Load base configuration (using first model's config as base)
+    base_config_path = list(model_configs.values())[0]
+    config = utils_loading.load_config(base_config_path)
     config["general"]["task"] = task
     config["general"]["database"] = database
 
-    df_real, dataframes_granite, metadata = utils_df.load_data(config)
-    print("df_real", df_real)
-    # metrics_fidelity = []
-    # print("granite")
-    # for conf, df in zip(config["dataframes"], dataframes_granite):
-    #     res = evaluate_fidelity.compute_fidelity_metrics(df_real, df, metadata)
-    #     print("{}_{}".format(conf["type"], conf["mild_rate"]), res)
-    #     metrics_fidelity.append(res)
+    df_real, _, metadata = utils_df.load_data(config)
+    model_dataframes = load_model_data(model_configs, task, database)
 
-    path = "./src/configs/evaluation/attack/eval_mild_effect_attack_mixtral22b.yaml"
-    config3 = utils_loading.load_config(path)
-    config3["general"]["task"] = task
-    config3["general"]["database"] = database
-    _, dataframes_mixtral_22b, metadata = utils_df.load_data(config3)
+    # Evaluate fidelity
+    # evaluate_fidelity_for_models(df_real, model_dataframes, metadata)
 
-    # metrics_fidelity = []
-    # print("mixtral-22b")
-    # for conf, df in zip(config["dataframes"], dataframes_mixtral_22b):
-    #     res = evaluate_fidelity.compute_fidelity_metrics(df_real, df, metadata)
-    #     print("{}_{}".format(conf["type"], conf["mild_rate"]), res)
-    #     metrics_fidelity.append(res)
+    # Evaluate fairness
+    fairness_results, fairness_dataframes = evaluate_fairness_func(
+        df_real, model_dataframes, config, args.save
+    )
 
-    path = "./src/configs/evaluation/attack/eval_mild_effect_attack_llama70b.yaml"
-    config2 = utils_loading.load_config(path)
-    config2["general"]["task"] = task
-    config2["general"]["database"] = database
-    _, dataframes_llama, metadata = utils_df.load_data(config2)
+    # Evaluate quality
+    quality_results = evaluate_quality_func(
+        df_real, model_dataframes, config, args.save
+    )
 
-    # metrics_fidelity = []
-    # print("llama")
-    # for conf, df in zip(config["dataframes"], dataframes_llama):
-    #     res = evaluate_fidelity.compute_fidelity_metrics(df_real, df, metadata)
-    #     print("{}_{}".format(conf["type"], conf["mild_rate"]), res)
-    #     metrics_fidelity.append(res)
-
-    path = "./src/configs/evaluation/attack/eval_mild_effect_attack_mixtral7b.yaml"
-    config4 = utils_loading.load_config(path)
-    config4["general"]["task"] = task
-    config4["general"]["database"] = database
-    _, dataframes_mixtral_7b, metadata = utils_df.load_data(config4)
-
-    # metrics_fidelity = []
-    # print("mixtral-7b")
-    # for conf, df in zip(config["dataframes"], dataframes_mixtral_7b):
-    #     res = evaluate_fidelity.compute_fidelity_metrics(df_real, df, metadata)
-    #     print("{}_{}".format(conf["type"], conf["mild_rate"]), res)
-    #     metrics_fidelity.append(res)
-        
-    evaluate_fairness_func(df_real, dataframes_granite, dataframes_mixtral_7b, dataframes_mixtral_22b, dataframes_llama, config, args.save)
-    # evaluate_quality_func(df_real, dataframes_granite, dataframes_mixtral_7b, dataframes_mixtral_22b, dataframes_llama, config, args.save)
+    print("Evaluation completed successfully!")
+    print(f"Evaluated models: {list(model_configs.keys())}")
 
 
 if __name__ == "__main__":

@@ -481,13 +481,7 @@ def plot_gender_trends_by_icl_gender(df_fairness, config):
     return fig, "gender_trends_by_icl_gender"
 
 
-def plot_gender_trends_comparison_attack(
-    df_fairness,
-    df_fairness_mixtral7b,
-    df_fairness_mixtral22b,
-    df_fairness_llama,
-    config
-):
+def plot_gender_trends_comparison_attack_flexible(all_dataframes, config):
     def _ensure_bias(df):
         df = df.copy()
         if "bias_pct" not in df.columns:
@@ -500,21 +494,37 @@ def plot_gender_trends_comparison_attack(
             )
         return df.sort_values("bias_pct")
 
-    dfs = [
-        (_ensure_bias(df_fairness), "Granite-8B"),
-        (_ensure_bias(df_fairness_mixtral7b), "Mixtral-7B"),
-        (_ensure_bias(df_fairness_mixtral22b), "Mixtral-22B"),
-        (_ensure_bias(df_fairness_llama),  "Llama-70B")
-    ]
+    # Prepare data for all models
+    model_data = []
+    for model_name, df_fairness in all_dataframes.items():
+        df_processed = _ensure_bias(df_fairness)
+        model_data.append((df_processed, model_name))
+
+    n_models = len(model_data)
+    if n_models == 0:
+        raise ValueError("No model data provided")
+
+    # Dynamic figure sizing based on number of models
+    fig_width = min(6 * n_models, 30)  # Cap at 30 inches width
+    fig, axes = plt.subplots(1, n_models, figsize=(fig_width, 5), sharey=True)
+    
+    # Handle single model case
+    if n_models == 1:
+        axes = [axes]
 
     cmap = plt.get_cmap("tab10")
     male_color = cmap(0)
     female_color = cmap(1)
-    fig, axes = plt.subplots(1, 4, figsize=(24, 5), sharey=True)
 
-    for ax, (df, model_name) in zip(axes, dfs):
+    for ax, (df, model_name) in zip(axes, model_data):
         df_main = df[df["name"].str.startswith("Mild Bias")].sort_values("bias_pct")
-        df_base = df[df["name"].str.lower().isin(["no icl"]) ]
+        df_base = df[df["name"].str.lower().isin(["no icl"])]
+
+        if df_main.empty:
+            ax.text(0.5, 0.5, f"No data for\n{model_name}", 
+                   ha='center', va='center', transform=ax.transAxes)
+            ax.set_title(model_name, fontsize=24, pad=15)
+            continue
 
         x_main = df_main["bias_pct"].values
         y_male = df_main["mean_label_privileged"].values
@@ -535,6 +545,7 @@ def plot_gender_trends_comparison_attack(
         ax.set_title(model_name, fontsize=24, pad=15)
         ax.set_xlabel("In-context Bias (%)", fontsize=24, labelpad=10)
 
+        # Add baseline if available
         if not df_base.empty:
             real_p = df_base["mean_label_privileged"].iloc[0]
             real_u = df_base["mean_label_unprivileged"].iloc[0]
@@ -552,17 +563,28 @@ def plot_gender_trends_comparison_attack(
 
     axes[0].set_ylabel("Pr(Y=1)", fontsize=24, labelpad=10)
 
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(
-        handles, labels,
-        loc='upper center',
-        bbox_to_anchor=(0.5, 1.08),  # x-center, slightly above
-        ncol=len(labels),
-        frameon=False,
-        fontsize=22
-    )
+    # Get legend from first axis that has data
+    handles, labels = None, None
+    for ax in axes:
+        try:
+            h, l = ax.get_legend_handles_labels()
+            if h:  # If there are handles
+                handles, labels = h, l
+                break
+        except:
+            continue
+
+    if handles and labels:
+        fig.legend(
+            handles, labels,
+            loc='upper center',
+            bbox_to_anchor=(0.5, 1.08),
+            ncol=len(labels),
+            frameon=False,
+            fontsize=22
+        )
 
     fig.tight_layout(pad=2.0)
     fig.subplots_adjust(top=0.85)
 
-    return fig, "gender_trends_comparison_attack"
+    return fig, "gender_trends_comparison_attack_flexible"

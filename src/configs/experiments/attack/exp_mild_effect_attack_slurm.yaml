@@ -1,68 +1,192 @@
 experiments:
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.0
-    icl_records: 0 # baseline -- no in-context samples
-    model_name: "mixtral-8x7b"
+  # MIXTRAL-8x7B
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.0
+  #   icl_records: 0 # baseline -- no in-context samples
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.0
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.1
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.2
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.3
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.4
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.5
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.6
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.7
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.8
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.9
+  #   model_name: "mixtral-8x7b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 1.0
+  #   model_name: "mixtral-8x7b"
+
+  # MIXTRAL-8x22B
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.0
+  #   icl_records: 0 # baseline -- no in-context samples
+  #   model_name: "mixtral-8x22b"
 
   - bias_type: clean
     icl_gender: male_female_icl
     mild_rate: 0.0
-    model_name: "mixtral-8x7b"
+    model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.1
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.1
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.2
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.2
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.3
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.3
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.4
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.4
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.5
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.5
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.6
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.6
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.7
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.7
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.8
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.8
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 0.9
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.9
+  #   model_name: "mixtral-8x22b"
 
-  - bias_type: clean
-    icl_gender: male_female_icl
-    mild_rate: 1.0
-    model_name: "mixtral-8x7b"
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 1.0
+  #   model_name: "mixtral-8x22b"
+
+  # # GRANITE-8B
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.0
+  #   icl_records: 0 # baseline -- no in-context samples
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.0
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.1
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.2
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.3
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.4
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.5
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.6
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.7
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.8
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 0.9
+  #   model_name: "granite-8b"
+
+  # - bias_type: clean
+  #   icl_gender: male_female_icl
+  #   mild_rate: 1.0
+  #   model_name: "granite-8b"
 
 
 sdg:
-  sdg_model: "mixtral-8x7b" 
   icl: True
   icl_records: 20
   bias_type: "clean" # "severe", "backdoor", "mild", "clean"

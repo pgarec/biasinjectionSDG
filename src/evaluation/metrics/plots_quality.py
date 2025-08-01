@@ -222,24 +222,19 @@ def plot_evaluation_results_mild_effect_comparison(
     return fig, "quality_metrics_mild_effect_comparison"
 
 
-def plot_evaluation_results_quality(
-    metrics_datasets_granite,
-    metrics_datasets_mixtral7b,
-    metrics_datasets_mixtral22b,
-    metrics_datasets_llama,
+def plot_evaluation_results_mild_effect_comparison_flexible(
+    all_metrics_datasets,
     real_baselines,
     config=None
 ):
     def extract_bias_percent(name):
         return float(pd.Series(name).str.extract(r"(\d+(?:\.\d+)?)%")[0])
 
-    def build_df(metrics_datasets, name_model):
+    def build_df(metrics_datasets, model_name):
         rows = []
         for idx, experiment, model_results in metrics_datasets:
             for m in model_results:
                 model = m.get("model", "")
-                if name_model.lower() not in model.lower():
-                    continue
                 dataset_name = m.get("dataset", "")
                 # only mild-bias synthetic experiments
                 if "Mild Bias" not in dataset_name or "(synthetic)" not in model:
@@ -248,89 +243,130 @@ def plot_evaluation_results_quality(
                 rows.append({
                     "bias_percent": bp,
                     "model": model,
-                    "f1_mean":        m.get("f1_mean", np.nan),
-                    "precision_mean": m.get("precision_mean", np.nan),
-                    "recall_mean":    m.get("recall_mean", np.nan),
+                    "avg_proba_y1_privileged": m.get("avg_proba_y1_privileged_mean", np.nan),
+                    "avg_proba_y1_non_privileged": m.get("avg_proba_y1_non_privileged_mean", np.nan)
                 })
         return pd.DataFrame(rows).sort_values("bias_percent")
 
-    # build one df per model family
-    df_granite = build_df(metrics_datasets_granite, "random forest")
-    df_mix7b  = build_df(metrics_datasets_mixtral7b,  "random forest")
-    df_mix22b = build_df(metrics_datasets_mixtral22b, "random forest")
-    df_llama  = build_df(metrics_datasets_llama,      "random forest")
+    # Build dataframes for all models
+    model_dfs = {}
+    model_labels = {}
+    
+    # Create clean labels for display
+    label_mapping = {
+        "granite": "Granite",
+        "mixtral-7b": "Mixtral-7B", 
+        "mixtral-22b": "Mixtral-22B",
+        "llama": "Llama",
+        "gpt": "GPT"
+    }
+    
+    for model_name, metrics_datasets in all_metrics_datasets.items():
+        df = build_df(metrics_datasets, "random forest")  # or make this configurable
+        if not df.empty:
+            model_dfs[model_name] = df
+            
+            # Create display label
+            clean_label = model_name
+            for key, label in label_mapping.items():
+                if key.lower() in model_name.lower():
+                    clean_label = label
+                    break
+            model_labels[model_name] = clean_label
 
-    # map real baselines by model name
+    n_models = len(model_dfs)
+    if n_models == 0:
+        raise ValueError("No valid model data found for plotting")
+
+    # Map baselines by model name
     baseline_map = {b["model"]: b for b in real_baselines}
-
-    # prepare colors & markers
+    
+    # Colors
     cmap = plt.get_cmap("tab10")
-    metric_styles = [
-        ("F1 Score",        "f1_mean",        "o", cmap(0)),
-        ("Precision",       "precision_mean", "s", cmap(1)),
-        ("Recall",          "recall_mean",    "^", cmap(2)),
-    ]
+    privileged_color = cmap(0)
+    unprivileged_color = cmap(1)
 
-    fig, axes = plt.subplots(1, 4, figsize=(24, 5), sharey=True)
-    dfs    = [df_granite, df_mix7b, df_mix22b, df_llama]
-    labels = ["Granite 8B", "Mixtral-7B", "Mixtral-22B", "Llama 70B"]
+    # Dynamic figure sizing
+    fig_width = min(6 * n_models, 30)  # Cap at 30 inches
+    fig, axes = plt.subplots(1, n_models, figsize=(fig_width, 5), sharey=True)
+    
+    # Handle single model case
+    if n_models == 1:
+        axes = [axes]
 
-    for idx, (ax, df) in enumerate(zip(axes, dfs)):
+    for idx, (model_name, df) in enumerate(model_dfs.items()):
+        ax = axes[idx]
+        
+        if df.empty:
+            ax.text(0.5, 0.5, f"No data for\n{model_labels[model_name]}", 
+                   ha='center', va='center', transform=ax.transAxes)
+            ax.set_title(model_labels[model_name], fontsize=24, pad=15)
+            continue
+
         x = df["bias_percent"].values
-        # plot each metric
-        for title, col, marker, color in metric_styles:
-            y = df[col].values
-            ax.plot(
-                x, y,
-                marker=marker, linestyle="-",
-                linewidth=2, color=color,
-                label=title
-            )
+        y_priv = df["avg_proba_y1_privileged"].values
+        y_unpriv = df["avg_proba_y1_non_privileged"].values
 
-        # add real-model baselines
+        ax.plot(x, y_priv,  marker="s", linestyle="-",  linewidth=2.5,
+                color=privileged_color,     label="Privileged")
+        ax.plot(x, y_unpriv, marker="^", linestyle="--", linewidth=2.5,
+                color=unprivileged_color, label="Unprivileged")
+
+        ax.fill_between(x, y_priv, y_unpriv, where=y_priv >= y_unpriv,
+                        facecolor=privileged_color,   alpha=0.2, interpolate=True)
+        ax.fill_between(x, y_priv, y_unpriv, where=y_priv < y_unpriv,
+                        facecolor=unprivileged_color, alpha=0.2, interpolate=True)
+
+        # Add baseline if available
         if not df.empty:
             synth_model = df["model"].iloc[0]
-            real_model  = synth_model.replace("(synthetic)", "(real)")
-            baseline    = baseline_map.get(real_model, {})
-            for title, col, _, color in metric_styles:
-                val = baseline.get(col, None)
-                if val is not None:
-                    ax.axhline(
-                        val,
-                        linestyle="--",
-                        color=color,
-                        linewidth=1.5,
-                        label=f"Real {title}"
-                    )
+            real_model = synth_model.replace("(synthetic)", "(real)")
+            baseline = baseline_map.get(real_model, {})
+            
+            rb = baseline.get("avg_proba_y1_privileged", None)
+            rnb = baseline.get("avg_proba_y1_non_privileged", None)
+            
+            if rb is not None:
+                ax.axhline(rb, linestyle=":",  color=privileged_color,
+                           linewidth=2, label="Real Privileged")
+            if rnb is not None:
+                ax.axhline(rnb, linestyle="--", color=unprivileged_color,
+                           linewidth=2, label="Real Unprivileged")
 
-        # titles & axis
-        title = synth_model.replace(" (synthetic)", f" – {labels[idx]}")
-        title = title.replace("Random Forest", "RF")
-        ax.set_title(title, fontsize=20, pad=12)
-        ax.set_xlabel("In-context Bias (%)", fontsize=18)
+        ax.set_title(f"{model_labels[model_name]}", fontsize=24, pad=15)
+        ax.set_xlabel("In-context Bias (%)", fontsize=24, labelpad=6)
         ax.set_xlim(0, 100)
+        
         xticks = x[::2] if len(x) > 6 else x
         ax.set_xticks(xticks)
-        ax.set_xticklabels([f"{int(p)}" for p in xticks], fontsize=14)
-        ax.tick_params(axis="y", labelsize=14)
-        ax.grid(True, linestyle="--", alpha=0.6)
+        ax.set_xticklabels([f"{int(p)}" for p in xticks], fontsize=18)
+        ax.tick_params(axis='y', labelsize=18)
+        ax.grid(True, linestyle='--', alpha=0.7)
 
-    axes[0].set_ylabel("Weighted metric", fontsize=18)
-    # shared legend
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(
-        handles, labels,
-        loc="upper center",
-        bbox_to_anchor=(0.5, 1.05),
-        ncol=len(metric_styles)*2,  # metrics + baselines
-        frameon=False,
-        fontsize=16
-    )
+    axes[0].set_ylabel("Pr(Y=1)", fontsize=24, labelpad=8)
+    
+    # Get legend from first axis that has data
+    handles, labels = None, None
+    for ax in axes:
+        try:
+            h, l = ax.get_legend_handles_labels()
+            if h:  # If there are handles
+                handles, labels = h, l
+                break
+        except:
+            continue
+
+    if handles and labels:
+        fig.legend(handles, labels,
+                   loc='upper center',
+                   bbox_to_anchor=(0.5, 1.08),
+                   ncol=len(labels),
+                   frameon=False, fontsize=22)
 
     fig.tight_layout(pad=2.0)
-    fig.subplots_adjust(top=0.88)
+    fig.subplots_adjust(top=0.85)
 
-    return fig, "quality_metrics_evaluation"
+    return fig, "quality_metrics_mild_effect_comparison_flexible"
 
 
 def plot_evaluation_results_icl_demonstration(metrics_datasets, real_baselines):

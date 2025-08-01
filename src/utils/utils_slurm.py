@@ -75,7 +75,7 @@ def run_experiments_slurm(
     # Environment variables and paths
     home_code_dir = os.getenv('EXP_HOME_CODE_DIR', os.getcwd())
     venv_dir = os.getenv('EXP_VENV_DIR', "/gpfs/scratch/bsc98/bsc098949/venv")
-    slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './src/data_generation/slurm.sh')
+    slurm_executable = os.getenv('EXP_SLURM_EXECUTABLE', './src/data_generation/slurm/slurm.sh')
     benchmark_executable = os.getenv('EXP_BENCHMARK_EXECUTABLE', 'src/data_generation/slurm/caller.py')
 
     # SLURM configuration
@@ -85,14 +85,6 @@ def run_experiments_slurm(
     exclusive = cfg_general.get("slurm_exclusive", False)
     no_effect = cfg_general.get("slurm_no_effect", False)
 
-    # Path
-    exp_results_path = cfg_paths["synthesized_data_path"].format(
-                sdg_model=cfg_sdg["sdg_model"],
-                task=cfg_general["task"],
-                prompt_id=cfg_sdg["prompt_id"]
-            )
-    os.makedirs(exp_results_path, exist_ok=True)
-    
     # vLLM configuration
     model_path_orig = cfg_general.get("model_path", "/gpfs/scratch/bsc98/models/")
     gpu_memory_utilization = cfg_general.get("gpu_memory_utilization", 0.9)
@@ -115,6 +107,13 @@ def run_experiments_slurm(
     submitted_jobs = []
     
     for exp_idx, experiment in enumerate(experiments):
+        exp_results_path = cfg_paths["synthesized_data_path"].format(
+            sdg_model=experiment["model_name"],
+            task=cfg_general["task"],
+            prompt_id=cfg_sdg["prompt_id"]
+        )
+        os.makedirs(exp_results_path, exist_ok=True)
+    
         model_path = model_path_orig + experiment.get("model_name")
         # Create experiment config
         exp_config = {
@@ -129,13 +128,13 @@ def run_experiments_slurm(
         }
         
         # Save experiment config
-        config_file = os.path.join(exp_results_path, f"experiment_config_{experiment['mild_rate']}_{experiment['icl_records']}.json")
+        config_file = os.path.join(exp_results_path, f"experiment_config_{experiment['mild_rate']}_{experiment.get('icl_records', 80)}.json")
         with open(config_file, "w") as f:
             json.dump(exp_config, f, indent=2)
         
         # Create arguments for caller script
         arguments = (
-            f"--config '{config_file}' "
+            f"--config-path '{config_file}' "
             f"--output-dir '{exp_results_path}' "
             f"--model-path '{model_path}' "
             f"--gpu-memory-utilization {gpu_memory_utilization}"
@@ -181,23 +180,3 @@ def run_experiments_slurm(
         except Exception as e:
             print(f"Failed to submit job for experiment {exp_idx}: {e}")
             continue
-    
-    # Save job submission summary
-    summary_file = os.path.join(exp_results_path, "job_submission_summary.json")
-    with open(summary_file, "w") as f:
-        json.dump({
-            "total_experiments": len(experiments),
-            "submitted_jobs": len(submitted_jobs),
-            "model_path": model_path,
-            "slurm_settings": {
-                "user": user,
-                "queue": queue,
-                "max_duration": max_duration,
-                "exclusive": exclusive
-            },
-            "jobs": submitted_jobs
-        }, f, indent=2)
-    
-    print(f"\n📊 Summary: Submitted {len(submitted_jobs)}/{len(experiments)} jobs")
-    print(f"📁 Results will be saved to: {exp_results_path}")
-    print(f"📄 Job submission summary saved to: {summary_file}")
