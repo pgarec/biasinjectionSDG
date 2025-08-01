@@ -97,6 +97,7 @@ ENV/
 env/
 .venv/
 
+# Folders
 output_data/
 wandb/
 /workspace
